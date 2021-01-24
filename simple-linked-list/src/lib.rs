@@ -3,12 +3,15 @@ use std::iter::FromIterator;
 pub struct SimpleLinkedList<T> {
     // Delete this field
     // dummy is needed to avoid unused parameter error during compilation
-    dummy: ::std::marker::PhantomData<T>,
+    // dummy: ::std::marker::PhantomData<T>,
+    list: Vec<T>,
 }
 
 impl<T> SimpleLinkedList<T> {
     pub fn new() -> Self {
-        unimplemented!()
+        SimpleLinkedList {
+            list: Vec::new(),
+        }
     }
 
     // You may be wondering why it's necessary to have is_empty()
@@ -17,33 +20,39 @@ impl<T> SimpleLinkedList<T> {
     // whereas is_empty() is almost always cheap.
     // (Also ask yourself whether len() is expensive for SimpleLinkedList)
     pub fn is_empty(&self) -> bool {
-        unimplemented!()
+        self.list.is_empty()
     }
 
     pub fn len(&self) -> usize {
-        unimplemented!()
+        self.list.len()
     }
 
     pub fn push(&mut self, _element: T) {
-        unimplemented!()
+        self.list.push(_element)
     }
 
     pub fn pop(&mut self) -> Option<T> {
-        unimplemented!()
+        self.list.pop()
     }
 
     pub fn peek(&self) -> Option<&T> {
-        unimplemented!()
+        if SimpleLinkedList::is_empty(&self) {
+            return None
+        }
+        self.list.get(self.list.len() - 1)
     }
 
-    pub fn rev(self) -> SimpleLinkedList<T> {
-        unimplemented!()
+    pub fn rev(mut self) -> SimpleLinkedList<T> {
+        self.list.reverse();
+        self
     }
 }
 
 impl<T> FromIterator<T> for SimpleLinkedList<T> {
     fn from_iter<I: IntoIterator<Item = T>>(_iter: I) -> Self {
-        unimplemented!()
+        SimpleLinkedList {
+            list: Vec::from_iter(_iter)
+        }
     }
 }
 
@@ -60,6 +69,6 @@ impl<T> FromIterator<T> for SimpleLinkedList<T> {
 
 impl<T> Into<Vec<T>> for SimpleLinkedList<T> {
     fn into(self) -> Vec<T> {
-        unimplemented!()
+        self.list
     }
 }
