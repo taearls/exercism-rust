@@ -24,7 +24,8 @@ impl PascalsTriangle {
     }
 
     fn calculate_row(row_number: u32) -> Vec<u32> {
-        let mut vec: Vec<u32> = vec![1];
+        let mut vec: Vec<u32> = Vec::with_capacity(row_number as usize); 
+        vec.push(1);
         match row_number {
             1 => (),
             2 => vec.push(1),
