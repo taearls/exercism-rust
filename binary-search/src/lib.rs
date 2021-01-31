@@ -11,9 +11,6 @@ pub fn find(array: &[i32], key: i32) -> Option<usize> {
         }
 
         let mid = (((left + right) as f32) / 2.0).floor() as usize;
-        println!("left: {}", left);
-        println!("mid: {}", mid);
-        println!("right: {}", right);
         match array.get(mid) {
             Some(num) => {
                 if *num < key {
