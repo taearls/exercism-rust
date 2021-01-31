@@ -1,10 +1,11 @@
-pub struct Triangle {
-    sides: [u64; 3],
+pub struct Triangle<T> {
+    sides: [T; 3],
 }
 
-impl Triangle {
-    pub fn build(sides: [u64; 3]) -> Option<Triangle> {
-        if sides[0] <= 0 || sides[1] <= 0 || sides[2] <= 0 {
+impl<T: Copy + Default + std::cmp::PartialEq + std::ops::Add<Output = T> + std::cmp::PartialOrd> Triangle<T> {
+    pub fn build(sides: [T; 3]) -> Option<Triangle<T>> {
+        
+        if &sides[0] <= &Default::default() || &sides[1] <= &Default::default() || &sides[2] <= &Default::default() {
             return None;
         } else if sides[1] + sides[2] < sides[0] {
             return None;
