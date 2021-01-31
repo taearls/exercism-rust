@@ -1,12 +1,12 @@
-pub fn find<T, U> (array: T, key: U) -> Option<usize>
-where 
+pub fn find<T, U>(array: T, key: U) -> Option<usize>
+where
     T: AsRef<[U]>,
-    U: Ord, 
+    U: Ord,
 {
     let array_ref = array.as_ref();
     let mut left = 0;
     let mut right = array_ref.len();
-    
+
     // if len is zero, subtracting 1 will create an overflow error bc it's a usize
     if right == 0 {
         return None;
