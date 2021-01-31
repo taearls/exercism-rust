@@ -1,23 +1,26 @@
-// This annotation prevents Clippy from warning us that `School` has a
-// `fn new()` with no arguments, but doesn't implement the `Default` trait.
-//
-// Normally, it's good practice to just do what Clippy tells you, but in this
-// case, we want to keep things relatively simple. The `Default` trait is not the point
-// of this exercise.
-#[allow(clippy::new_without_default)]
-pub struct School {}
+pub struct School {
+    students: Vec<(u32, String)>,
+}
 
 impl School {
     pub fn new() -> School {
-        unimplemented!()
+        School { students: vec![] }
     }
 
     pub fn add(&mut self, grade: u32, student: &str) {
-        unimplemented!("Add {} to the roster for {}", student, grade)
+        self.students.push((grade, student.to_string()));
     }
 
     pub fn grades(&self) -> Vec<u32> {
-        unimplemented!()
+        let mut result: Vec<u32> = Vec::new();
+
+        for (grade, _student) in &self.students {
+            if !result.contains(grade) {
+                result.push(*grade);
+            }
+        }
+        result.sort_unstable();
+        result
     }
 
     // If `grade` returned a reference, `School` would be forced to keep a `Vec<String>`
@@ -25,6 +28,20 @@ impl School {
     // the internal structure can be completely arbitrary. The tradeoff is that some data
     // must be copied each time `grade` is called.
     pub fn grade(&self, grade: u32) -> Vec<String> {
-        unimplemented!("Return the list of students in {}", grade)
+        let mut result: Vec<String> = Vec::new();
+
+        for (student_grade, student) in &self.students {
+            if *student_grade == grade {
+                result.push(String::from(student))
+            }
+        }
+        result.sort_unstable();
+        result
+    }
+}
+
+impl Default for School {
+    fn default() -> Self {
+        Self::new()
     }
 }
