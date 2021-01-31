@@ -5,7 +5,7 @@ pub struct Triangle<T> {
 impl<T: Copy + Default + std::cmp::PartialEq + std::ops::Add<Output = T> + std::cmp::PartialOrd> Triangle<T> {
     pub fn build(sides: [T; 3]) -> Option<Triangle<T>> {
         
-        if &sides[0] <= &Default::default() || &sides[1] <= &Default::default() || &sides[2] <= &Default::default() {
+        if sides[0] <= Default::default() || sides[1] <= Default::default() || sides[2] <= Default::default() {
             return None;
         } else if sides[1] + sides[2] < sides[0] {
             return None;
