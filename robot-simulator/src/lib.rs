@@ -1,5 +1,3 @@
-// The code below is a stub. Just enough to satisfy the compiler.
-// In order to pass the tests you can add-to or change any of this code.
 #[derive(PartialEq, Debug, Copy, Clone)]
 pub enum Direction {
     North,
