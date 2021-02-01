@@ -4,18 +4,31 @@ pub enum Error {
     GameComplete,
 }
 
-pub struct BowlingGame {}
+pub struct BowlingGame {
+    score: u16,
+    pins: u16,
+    rolls_left: u16,
+}
 
 impl BowlingGame {
     pub fn new() -> Self {
-        unimplemented!();
+        BowlingGame { score: 0, pins: 10, rolls_left: 20 }
     }
 
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
-        unimplemented!("Record that {} pins have been scored", pins);
+        if !(0..=10).contains(&pins) {
+            return Err(Error::NotEnoughPinsLeft)
+        } else if self.rolls_left == 0 {
+            return Err(Error::GameComplete)
+        }
+        // TODO: implement logic for closed frames (strikes + spares)
+        self.rolls_left -= 1;
+        self.score += pins;
+        Ok(())
     }
 
     pub fn score(&self) -> Option<u16> {
-        unimplemented!("Return the score if the game is complete, or None if not.");
+        
+        if self.rolls_left > 0 { None } else { Some(self.score) }
     }
 }
