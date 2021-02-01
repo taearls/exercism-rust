@@ -49,22 +49,21 @@ impl Robot {
     }
 
     pub fn instructions(&mut self, instructions: &str) -> Self {
-        let mut new_robot = *self;
         for char in instructions.chars() {
             match char {
                 'A' => {
-                    new_robot = self.advance();
+                    self.advance();
                 }
                 'L' => {
-                    new_robot = self.turn_left();
+                    self.turn_left();
                 }
                 'R' => {
-                    new_robot = self.turn_right();
+                    self.turn_right();
                 }
                 _ => (),
             };
         }
-        new_robot
+        *self
     }
 
     pub fn position(&self) -> (i32, i32) {
