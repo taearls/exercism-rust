@@ -16,12 +16,8 @@ pub struct Robot {
 }
 
 impl Robot {
-    pub fn new(x: i32, y: i32, d: Direction) -> Self {
-        Robot {
-            x: x,
-            y: y,
-            direction: d,
-        }
+    pub fn new(x: i32, y: i32, direction: Direction) -> Self {
+        Robot { x, y, direction }
     }
 
     pub fn turn_right(&mut self) -> Self {
