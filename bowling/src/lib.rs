@@ -27,7 +27,7 @@ pub struct BowlingGame {
 
 impl BowlingGame {
     pub fn new() -> Self {
-        BowlingGame { 
+        BowlingGame {
             frames: vec![],
             is_game_over: false,
         }
@@ -42,12 +42,12 @@ impl BowlingGame {
                 score += frame.score;
             }
             Some(score)
-        } 
+        }
     }
 
     pub fn roll(&mut self, pins: u16) -> Result<(), Error> {
         if !(0..=10).contains(&pins) {
-            return Err(Error::NotEnoughPinsLeft)
+            return Err(Error::NotEnoughPinsLeft);
         } else if self.is_game_over {
             return Err(Error::GameComplete);
         }
@@ -65,7 +65,7 @@ impl BowlingGame {
                     pins_left: (10 - pins),
                 };
                 self.frames.push(frame);
-            },
+            }
             len @ 1..=10 => {
                 match BowlingGame::normal_score(self, pins) {
                     Err(Error::NotEnoughPinsLeft) => return Err(Error::NotEnoughPinsLeft),
@@ -73,13 +73,12 @@ impl BowlingGame {
                 };
                 BowlingGame::check_spare(self, pins);
                 BowlingGame::check_strike(self, pins);
-                if  len == 10 
-                    && self.frames.last().unwrap().state == BowlingFrameState::Complete 
-                    || self.frames.last().unwrap().rolls == 3 
+                if len == 10 && self.frames.last().unwrap().state == BowlingFrameState::Complete
+                    || self.frames.last().unwrap().rolls == 3
                 {
                     self.is_game_over = true;
                 }
-            },
+            }
             _ => (),
         }
         Ok(())
@@ -91,11 +90,11 @@ impl BowlingGame {
 
         let last_frame_index = self.frames.len() - 1;
         let last_frame = self.frames.get_mut(last_frame_index).unwrap();
-        
+
         if pins > last_frame.pins_left {
-            return Err(Error::NotEnoughPinsLeft)
+            return Err(Error::NotEnoughPinsLeft);
         }
-        
+
         last_frame.score += pins;
         last_frame.pins_left -= pins;
         last_frame.rolls += 1;
@@ -110,9 +109,7 @@ impl BowlingGame {
             if last_frame_index + 1 == 10 {
                 last_frame.pins_left = 10;
             }
-        } else if last_frame.rolls == 2 
-            && last_frame.state == BowlingFrameState::Open 
-        {
+        } else if last_frame.rolls == 2 && last_frame.state == BowlingFrameState::Open {
             last_frame.state = BowlingFrameState::Complete;
         }
         Ok(())
@@ -122,9 +119,7 @@ impl BowlingGame {
         if self.frames.len() > 1 {
             let previous_frame_index = self.frames.len() - 2;
             let previous_frame = self.frames.get_mut(previous_frame_index).unwrap();
-            if previous_frame.state == BowlingFrameState::Spare 
-                && previous_frame.rolls < 3 
-            {
+            if previous_frame.state == BowlingFrameState::Spare && previous_frame.rolls < 3 {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
                 previous_frame.state = BowlingFrameState::Complete;
@@ -139,9 +134,7 @@ impl BowlingGame {
         if self.frames.len() > 1 {
             let previous_frame_index = self.frames.len() - 2;
             let previous_frame = self.frames.get_mut(previous_frame_index).unwrap();
-            if previous_frame.state == BowlingFrameState::Strike 
-                && previous_frame.rolls < 3 
-            {
+            if previous_frame.state == BowlingFrameState::Strike && previous_frame.rolls < 3 {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
                 // only check two frames before if there are enough frames
@@ -186,6 +179,10 @@ impl std::fmt::Display for BowlingFrame {
             BowlingFrameState::Spare => "spare",
             BowlingFrameState::Strike => "strike",
         };
-        write!(f, "score: {}, rolls: {}, state: {}, pins_left: {}", self.score, self.rolls, state_string, self.pins_left)
+        write!(
+            f,
+            "score: {}, rolls: {}, state: {}, pins_left: {}",
+            self.score, self.rolls, state_string, self.pins_left
+        )
     }
 }
