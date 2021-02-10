@@ -67,10 +67,9 @@ impl BowlingGame {
                 self.frames.push(frame);
             }
             len @ 1..=10 => {
-                match BowlingGame::normal_score(self, pins) {
-                    Err(Error::NotEnoughPinsLeft) => return Err(Error::NotEnoughPinsLeft),
-                    _ => (),
-                };
+                if let Err(Error::NotEnoughPinsLeft) = BowlingGame::normal_score(self, pins) {
+                    return Err(Error::NotEnoughPinsLeft);
+                }
                 BowlingGame::check_spare(self, pins);
                 BowlingGame::check_strike(self, pins);
                 if len == 10 && self.frames.last().unwrap().state == BowlingFrameState::Complete
@@ -115,7 +114,7 @@ impl BowlingGame {
         Ok(())
     }
 
-    fn check_spare(&mut self, pins: u16) -> () {
+    fn check_spare(&mut self, pins: u16) {
         if self.frames.len() > 1 {
             let previous_frame_index = self.frames.len() - 2;
             let previous_frame = self.frames.get_mut(previous_frame_index).unwrap();
@@ -127,7 +126,7 @@ impl BowlingGame {
         }
     }
 
-    fn check_strike(&mut self, pins: u16) -> () {
+    fn check_strike(&mut self, pins: u16) {
         // only check two frames before if the previous frame is a strike
         let mut should_check_two_frames_previous = false;
 
@@ -158,7 +157,7 @@ impl BowlingGame {
         }
     }
 
-    fn check_add_frame(&mut self) -> () {
+    fn check_add_frame(&mut self) {
         if self.frames.len() < 10 && self.frames.last().unwrap().state != BowlingFrameState::Open {
             let frame = BowlingFrame {
                 state: BowlingFrameState::Open,
@@ -168,6 +167,12 @@ impl BowlingGame {
             };
             self.frames.push(frame);
         }
+    }
+}
+
+impl Default for BowlingGame {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
