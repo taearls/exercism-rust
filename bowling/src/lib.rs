@@ -160,7 +160,7 @@ impl BowlingGame {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
                 should_check_two_frames_previous = true;
-                if previous_frame.rolls == 4 {
+                if previous_frame.rolls == 3 {
                     previous_frame.state = BowlingFrameState::Complete;
                 }
             }
@@ -172,7 +172,7 @@ impl BowlingGame {
             if previous_frame.state == BowlingFrameState::Strike {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
-                if previous_frame.rolls == 4 {
+                if previous_frame.rolls == 3 {
                     previous_frame.state = BowlingFrameState::Complete;
                 }
             }
