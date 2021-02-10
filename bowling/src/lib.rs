@@ -80,9 +80,9 @@ impl BowlingGame {
                     Err(Error::NotEnoughPinsLeft) => return Err(Error::NotEnoughPinsLeft),
                     _ => (),
                 };
-                BowlingGame::check_spare(self, pins);
-                BowlingGame::check_strike(self, pins);
-                println!("all frames: {:?}", self.frames);
+                // BowlingGame::check_spare(self, pins);
+                // BowlingGame::check_strike(self, pins);
+                // println!("all frames: {:?}", self.frames);
                 if self.frames.last().unwrap().state == BowlingFrameState::Complete || self.frames.last().unwrap().rolls == 3 {
                     println!("the game is over!");
                     self.is_game_over = true;
@@ -117,11 +117,14 @@ impl BowlingGame {
         last_frame.score += pins;
         last_frame.pins_left -= pins;
         last_frame.rolls += 1;
-        println!("pins: {}", pins);
-        println!("last_frame: {}", last_frame);
+        // println!("pins: {}", pins);
+        // if last_frame_index == 9 {
+        //     println!("last_frame: {}", last_frame);
+        // }
         if last_frame.pins_left == 0 {
             if last_frame.rolls == 1 {
-                println!("strike!");
+
+                println!("strike at frame {}!", last_frame_index + 1);
                 last_frame.state = BowlingFrameState::Strike;
             } else if last_frame.rolls == 2 {
                 last_frame.state = BowlingFrameState::Spare;
@@ -130,12 +133,14 @@ impl BowlingGame {
             if last_frame_index + 1 == 10 {
                 last_frame.pins_left = 10;
             }
-        } else if last_frame.rolls == 2 {
+        } else if last_frame.rolls == 2 
+            && last_frame.state == BowlingFrameState::Open 
+        {
             last_frame.state = BowlingFrameState::Complete;
         }
-        if last_frame_index + 1 == 10 {
-            println!("last frame inside normal_score: {}", last_frame);
-        }
+        // if last_frame_index + 1 == 10 {
+        //     println!("last frame inside normal_score: {}", last_frame);
+        // }
         Ok(())
     }
 
@@ -143,7 +148,9 @@ impl BowlingGame {
         if self.frames.len() > 1 {
             let previous_frame_index = self.frames.len() - 2;
             let previous_frame = self.frames.get_mut(previous_frame_index).unwrap();
-            if previous_frame.state == BowlingFrameState::Spare {
+            if previous_frame.state == BowlingFrameState::Spare 
+                && previous_frame.rolls < 3 
+            {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
                 previous_frame.state = BowlingFrameState::Complete;
@@ -153,10 +160,24 @@ impl BowlingGame {
 
     fn check_strike(&mut self, pins: u16) -> () {
         let mut should_check_two_frames_previous = false;
+
+        if self.frames.len() == 10 {
+            
+        }
+
+
+
+
+
+
+
+
         if self.frames.len() > 1 {
             let previous_frame_index = self.frames.len() - 2;
             let previous_frame = self.frames.get_mut(previous_frame_index).unwrap();
-            if previous_frame.state == BowlingFrameState::Strike {
+            if previous_frame.state == BowlingFrameState::Strike 
+                && previous_frame.rolls < 3 
+            {
                 previous_frame.score += pins;
                 previous_frame.rolls += 1;
                 should_check_two_frames_previous = true;
