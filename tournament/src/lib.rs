@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fmt;
+use std::cmp::Ordering;
 
 pub fn tally(match_results: &str) -> String {
     let mut result = String::from("Team                           | MP |  W |  D |  L |  P");
@@ -80,7 +81,7 @@ impl Team {
         self.points += 1;
     }
     pub fn get_sorted_vec(hashmap: HashMap<&str, Team>) -> Vec<Team> {
-        let mut result: Vec<Team> = Vec::new();
+        let mut result: Vec<Team> = Vec::with_capacity(hashmap.len());
 
         // build up an unsorted vec from the hashmap
         for (key, val) in hashmap.iter() {
@@ -97,7 +98,13 @@ impl Team {
 
         // sort by points
         // TODO: sort by name alphabetically if points are the same
-        result.sort_by(|a, b| b.points.cmp(&a.points));
+        result.sort_by(|a, b| {
+            let mut cmp = b.points.cmp(&a.points);
+            if cmp == Ordering::Equal {
+                cmp = a.name.cmp(&b.name);
+            }
+            cmp
+        });
         result
     }
 }
