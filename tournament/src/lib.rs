@@ -96,8 +96,7 @@ impl Team {
             result.push(team);
         }
 
-        // sort by points
-        // TODO: sort by name alphabetically if points are the same
+        // sort by points, then by name alphabetically
         result.sort_by(|a, b| {
             let mut cmp = b.points.cmp(&a.points);
             if cmp == Ordering::Equal {
