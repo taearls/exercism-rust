@@ -4,31 +4,31 @@ use std::fmt;
 
 pub fn tally(match_results: &str) -> String {
     let mut result = String::from("Team                           | MP |  W |  D |  L |  P");
-    if match_results.len() > 0 {
+    if !match_results.is_empty() {
         let mut teams_hashmap: HashMap<&str, Team> = HashMap::new();
-        let tournament_matches_vec: Vec<&str> = match_results.split("\n").collect();
+        let tournament_matches_vec: Vec<&str> = match_results.split('\n').collect();
 
         for tournament_match in tournament_matches_vec {
-            let match_result: Vec<&str> = tournament_match.split(";").collect();
+            let match_result: Vec<&str> = tournament_match.split(';').collect();
             let first_team_name = match_result.get(0).unwrap();
             let second_team_name = match_result.get(1).unwrap();
-            if let None = teams_hashmap.get(first_team_name) {
+            if teams_hashmap.get(first_team_name).is_none() {
                 teams_hashmap.insert(first_team_name, Team::new(first_team_name));
             }
-            if let None = teams_hashmap.get(second_team_name) {
+            if teams_hashmap.get(second_team_name).is_none() {
                 teams_hashmap.insert(second_team_name, Team::new(second_team_name));
             }
 
-            match match_result.get(2).unwrap() {
-                &"win" => {
+            match *match_result.get(2).unwrap() {
+                "win" => {
                     Team::win(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::lose(teams_hashmap.get_mut(second_team_name).unwrap());
                 }
-                &"loss" => {
+                "loss" => {
                     Team::lose(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::win(teams_hashmap.get_mut(second_team_name).unwrap());
                 }
-                &"draw" => {
+                "draw" => {
                     Team::draw(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::draw(teams_hashmap.get_mut(second_team_name).unwrap());
                 }
