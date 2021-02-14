@@ -1,6 +1,6 @@
+use std::cmp::Ordering;
 use std::collections::HashMap;
 use std::fmt;
-use std::cmp::Ordering;
 
 pub fn tally(match_results: &str) -> String {
     let mut result = String::from("Team                           | MP |  W |  D |  L |  P");
@@ -23,15 +23,15 @@ pub fn tally(match_results: &str) -> String {
                 &"win" => {
                     Team::win(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::lose(teams_hashmap.get_mut(second_team_name).unwrap());
-                },
+                }
                 &"loss" => {
                     Team::lose(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::win(teams_hashmap.get_mut(second_team_name).unwrap());
-                },
+                }
                 &"draw" => {
                     Team::draw(teams_hashmap.get_mut(first_team_name).unwrap());
                     Team::draw(teams_hashmap.get_mut(second_team_name).unwrap());
-                },
+                }
                 _ => panic!("invalid input. has to be win, loss, or draw."),
             }
         }
@@ -112,6 +112,15 @@ impl Team {
 impl fmt::Display for Team {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         // https://doc.rust-lang.org/std/fmt/index.html#fillalignment
-        write!(f, "\n{:<30} |{:>3} |{:>3} |{:>3} |{:>3} |{:>3}", self.name, self.matches_played, self.matches_won, self.matches_drawn, self.matches_lost, self.points)
+        write!(
+            f,
+            "\n{:<30} |{:>3} |{:>3} |{:>3} |{:>3} |{:>3}",
+            self.name,
+            self.matches_played,
+            self.matches_won,
+            self.matches_drawn,
+            self.matches_lost,
+            self.points
+        )
     }
 }
