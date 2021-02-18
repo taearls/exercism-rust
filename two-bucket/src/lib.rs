@@ -20,9 +20,6 @@ pub struct BucketStats {
 }
 // Test Case 1
 
-
-
-
 // solve(3, 5, 1, &Bucket::One),
 //         Some(BucketStats {
 //             moves: 4,
@@ -30,6 +27,19 @@ pub struct BucketStats {
 //             other_bucket: 5,
 //         })
 
+// Test Case 2
+// solve(3, 5, 1, &Bucket::Two),
+// Some(BucketStats {
+//     moves: 8,
+//     goal_bucket: Bucket::Two,
+//     other_bucket: 3,
+// })
+
+// Move 1
+// Bucket Two
+// (0, 5)
+// Bucket 1
+// (3, 2)
 /// Solve the bucket problem
 pub fn solve(
     capacity_1: u8,
@@ -37,48 +47,23 @@ pub fn solve(
     goal: u8,
     start_bucket: &Bucket,
 ) -> Option<BucketStats> {
-    // perform first move
     let mut bucket_amounts_hm: HashMap<usize, u8> = HashMap::new();
+    bucket_amounts_hm.insert(1, 0);
+    bucket_amounts_hm.insert(2, 0);
+    println!("bucket one capacity: {}, bucket two capacity: {}", capacity_1, capacity_2);
 
-    match *start_bucket {
-        Bucket::One => {
-            bucket_amounts_hm.insert(1, capacity_1);
-            bucket_amounts_hm.insert(2, 0);
-        },
-        Bucket::Two => {
-            bucket_amounts_hm.insert(1, 0);
-            bucket_amounts_hm.insert(2, capacity_2);
-        },
+    let mut pouring_bucket = match *start_bucket {
+        Bucket::One => Bucket::One,
+        Bucket::Two => Bucket::Two,
     };
-
-    let mut pouring_bucket = get_pouring_bucket(start_bucket);
-
-    let mut moves: u8 = 1;
-    // first move is working.
-    println!("bucket_amounts after move #1: ({}, {})", bucket_amounts_hm.get(&1).unwrap(), bucket_amounts_hm.get(&2).unwrap());
-
-    // perform subsequent moves, if necessary
+    let mut moves: u8 = 0;
 
     loop {
+        moves = pour(&start_bucket, &pouring_bucket, &mut bucket_amounts_hm, capacity_1, capacity_2, moves);
+        pouring_bucket = get_pouring_bucket(&pouring_bucket);
         if check_solved(&bucket_amounts_hm, goal) { 
             break;
         }
-        // TODO: figure out moves in these scenarios
-
-        // do I need to match against each bucket's capacity as well?
-
-        // should compare Bucket One to Bucket Two. implement partial eq with value for each bucket being the amount assigned to it. instead of using bucket_amounts var, write value to enum?
-        // let (pouring_bucket, poured_amount) = match bucket_one_amount.cmp(&bucket_two_amount) {
-        //     Ordering::Greater => {
-        //         // TODO: don't pour capacity. pour amount in bucket.
-        //         // only pour if there's enough room in other bucket.
-        //         (&Bucket::One, capacity_1)
-        //     },
-        //     Ordering::Less => (&Bucket::Two, capacity_1),
-        //     Ordering::Equal => break,
-        // };
-        moves = pour(&start_bucket, &pouring_bucket, &mut bucket_amounts_hm, capacity_1, capacity_2, moves);
-        pouring_bucket = get_pouring_bucket(&pouring_bucket);
     }
     
     let result = get_result_stats(moves, &bucket_amounts_hm, goal);
@@ -136,7 +121,6 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
                 new_bucket_one_amount = 0;
                 new_bucket_two_amount = bucket_one_amount + bucket_two_amount;
             }
-            // println!("new_bucket_one_amount: {}, new_bucket_two_amount: {}", new_bucket_one_amount, new_bucket_two_amount);
             (new_bucket_one_amount, new_bucket_two_amount)
         }
         // Move 1:
@@ -155,6 +139,7 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
     bucket_amounts_hm.insert(2, new_bucket_two_amount);
     println!("move #{}: ", moves + 1);
     println!("({}, {})", bucket_amounts_hm[&1], bucket_amounts_hm[&2]);
+
     moves + 1
 }
 
