@@ -98,8 +98,8 @@ fn pour(
     bucket_two_capacity: u8,
     moves: u8,
 ) -> u8 {
-    let bucket_one_amount = bucket_amounts_hm[&1];
-    let bucket_two_amount = bucket_amounts_hm[&2];
+    let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
+
     println!("pour is called, pouring from: {}", pouring_bucket);
     let (new_bucket_one_amount, new_bucket_two_amount) = match pouring_bucket {
         bucket @ Bucket::One => {
@@ -163,9 +163,7 @@ fn pour(
 }
 
 fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
-    let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
-    let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
-
+    let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
     bucket_one_amount == goal || bucket_two_amount == goal
 }
 
@@ -174,10 +172,10 @@ fn get_result_stats(
     bucket_amounts_hm: &HashMap<usize, u8>,
     goal: u8,
 ) -> Option<BucketStats> {
-    let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
-    let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
+    let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
     let bucket_amounts = (bucket_one_amount, bucket_two_amount);
 
+    // TODO: read from goal, not using literal 1
     let (goal_bucket, other_bucket) = match bucket_amounts {
         (1, _) => (Bucket::One, bucket_amounts.1),
         (_, 1) => (Bucket::Two, bucket_amounts.0),
@@ -198,6 +196,10 @@ fn get_pouring_bucket(bucket: &Bucket) -> Bucket {
         Bucket::One => Bucket::Two,
         Bucket::Two => Bucket::One,
     }
+}
+
+fn get_bucket_amounts(bucket_amounts_hm: &HashMap<usize, u8>) -> (u8, u8) {
+    (bucket_amounts_hm[&1], bucket_amounts_hm[&2])
 }
 
 impl fmt::Display for Bucket {
