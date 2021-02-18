@@ -1,4 +1,5 @@
-use std::cmp::Ordering;
+use std::fmt; 
+use std::collections::HashMap;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Bucket {
@@ -19,8 +20,7 @@ pub struct BucketStats {
 }
 // Test Case 1
 
-// Move 1:
-// Fill Bucket 1 (3, 0)
+
 
 
 // solve(3, 5, 1, &Bucket::One),
@@ -37,95 +37,139 @@ pub fn solve(
     goal: u8,
     start_bucket: &Bucket,
 ) -> Option<BucketStats> {
-    let mut bucket_amounts = (0, 0);
-    let mut moves: u8 = 0;
-
     // perform first move
-    let poured_amount = match *start_bucket {
-        Bucket::One => capacity_1,
-        Bucket::Two => capacity_2,
+    let mut bucket_amounts_hm: HashMap<usize, u8> = HashMap::new();
+
+    match *start_bucket {
+        Bucket::One => {
+            bucket_amounts_hm.insert(1, capacity_1);
+            bucket_amounts_hm.insert(2, 0);
+        },
+        Bucket::Two => {
+            bucket_amounts_hm.insert(1, 0);
+            bucket_amounts_hm.insert(2, capacity_2);
+        },
     };
-    bucket_amounts = pour(start_bucket, poured_amount, &bucket_amounts);
-    moves += 1;
-    println!("bucket_amounts after first move: ({}, {})", bucket_amounts.0, bucket_amounts.1);
+
+    let mut pouring_bucket = get_pouring_bucket(start_bucket);
+
+    let mut moves: u8 = 1;
+    // first move is working.
+    println!("bucket_amounts after move #1: ({}, {})", bucket_amounts_hm.get(&1).unwrap(), bucket_amounts_hm.get(&2).unwrap());
+
     // perform subsequent moves, if necessary
+
     loop {
-        if check_solved(bucket_amounts, goal) { 
+        if check_solved(&bucket_amounts_hm, goal) { 
             break;
         }
-        moves += 1;
-
         // TODO: figure out moves in these scenarios
 
         // do I need to match against each bucket's capacity as well?
-        let (pouring_bucket, poured_amount) = match bucket_amounts.0.cmp(&bucket_amounts.1) {
-            Ordering::Greater => (&Bucket::One, capacity_2),
-            Ordering::Less => (&Bucket::Two, capacity_1),
-            Ordering::Equal => break,
-        };
-        pour(pouring_bucket, poured_amount, &bucket_amounts);
+
+        // should compare Bucket One to Bucket Two. implement partial eq with value for each bucket being the amount assigned to it. instead of using bucket_amounts var, write value to enum?
+        // let (pouring_bucket, poured_amount) = match bucket_one_amount.cmp(&bucket_two_amount) {
+        //     Ordering::Greater => {
+        //         // TODO: don't pour capacity. pour amount in bucket.
+        //         // only pour if there's enough room in other bucket.
+        //         (&Bucket::One, capacity_1)
+        //     },
+        //     Ordering::Less => (&Bucket::Two, capacity_1),
+        //     Ordering::Equal => break,
+        // };
+        moves = pour(&start_bucket, &pouring_bucket, &mut bucket_amounts_hm, capacity_1, capacity_2, moves);
+        pouring_bucket = get_pouring_bucket(&pouring_bucket);
     }
     
-    let result = get_result_stats(moves, bucket_amounts, goal);
+    let result = get_result_stats(moves, &bucket_amounts_hm, goal);
     result
 }
 
-fn pour(pouring_bucket: &Bucket, poured_amount: u8, mut bucket_amounts: &(u8, u8)) -> (u8, u8) {
-    println!("pour is called, here are the args:\n poured_amount: {}\n bucket_amounts: ({}, {})", poured_amount, bucket_amounts.0, bucket_amounts.1);
-    let mut new_bucket_amounts = (bucket_amounts.0, bucket_amounts.1);
+// Move 1:
+// Fill Bucket 1 (3, 0)
 
-    match *pouring_bucket {
-        Bucket::One => {
-            if bucket_amounts.0 > poured_amount {
-                new_bucket_amounts.0 -= poured_amount;
+// Move 2: 
+// Fill Bucket 2 (0, 3)
+
+// Move 3:
+// Fill Bucket 1 (3, 3)
+
+// Move 4:
+// Fill Bucket 2 (1, 5)
+fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut HashMap<usize, u8>, bucket_one_capacity: u8, bucket_two_capacity: u8, moves: u8) -> u8 {
+    let bucket_one_amount = bucket_amounts_hm[&1];  
+    let bucket_two_amount = bucket_amounts_hm[&2];
+    println!("pour is called, pouring from: {}", pouring_bucket);
+    let (new_bucket_one_amount, new_bucket_two_amount) = match pouring_bucket {
+        bucket @ Bucket::One => {
+            let new_bucket_one_amount;
+            let new_bucket_two_amount;
+
+            if start_bucket == bucket && bucket_one_amount == 0 {
+                new_bucket_one_amount = bucket_one_capacity;
+                new_bucket_two_amount = bucket_two_amount;
+            } else if bucket_one_amount + bucket_two_amount > bucket_two_capacity {
+                if bucket_one_capacity > bucket_two_capacity { return moves; }
+
+                let poured_amount = bucket_two_capacity - bucket_two_amount;
+                new_bucket_one_amount = bucket_one_amount - poured_amount;
+                new_bucket_two_amount = bucket_two_amount + poured_amount;
+            } else {
+                new_bucket_one_amount = bucket_one_amount + bucket_two_amount;
+                new_bucket_two_amount = 0;
             }
-            new_bucket_amounts = match new_bucket_amounts.0.cmp(&poured_amount) {
-                Ordering::Greater => {
-                    new_bucket_amounts.0 -= poured_amount;
-                    new_bucket_amounts.1 += poured_amount;
-                    new_bucket_amounts
-                },
-                Ordering::Less => {
-                    if new_bucket_amounts.1 > poured_amount {
-                        new_bucket_amounts.1 -= poured_amount;
-                        new_bucket_amounts.0 += poured_amount;
-                    }
-                    new_bucket_amounts
-                },
-                Ordering::Equal => new_bucket_amounts
-            }
+            (new_bucket_one_amount, new_bucket_two_amount)
         },
-        Bucket::Two => {
-            if new_bucket_amounts.1 > poured_amount {
-             new_bucket_amounts.1 -= poured_amount;
-                new_bucket_amounts.0 += poured_amount;
+        bucket @ Bucket::Two => {
+            let new_bucket_one_amount;
+            let new_bucket_two_amount;
+
+            if start_bucket == bucket && bucket_two_amount == 0 {
+                new_bucket_one_amount = bucket_one_amount;
+                new_bucket_two_amount = bucket_two_capacity;
+            } else if bucket_one_amount + bucket_two_amount > bucket_one_capacity {
+                if bucket_two_capacity > bucket_one_capacity { return moves; }
+                let poured_amount = bucket_one_capacity - bucket_one_amount;
+                new_bucket_one_amount = bucket_one_amount + poured_amount;
+                new_bucket_two_amount = bucket_two_amount - poured_amount;
+            } else {
+                new_bucket_one_amount = 0;
+                new_bucket_two_amount = bucket_one_amount + bucket_two_amount;
             }
-            new_bucket_amounts = match new_bucket_amounts.1.cmp(&poured_amount) {
-                Ordering::Greater => {
-                    new_bucket_amounts.1 -= poured_amount;
-                    new_bucket_amounts
-                },
-                Ordering::Less => {
-                    if new_bucket_amounts.0 > poured_amount {
-                        new_bucket_amounts.0 -= poured_amount;
-                        new_bucket_amounts.1 += poured_amount;
-                    }
-                    new_bucket_amounts
-                },
-                Ordering::Equal => new_bucket_amounts
-            }
+            // println!("new_bucket_one_amount: {}, new_bucket_two_amount: {}", new_bucket_one_amount, new_bucket_two_amount);
+            (new_bucket_one_amount, new_bucket_two_amount)
         }
-    }
-    new_bucket_amounts
+        // Move 1:
+        // Fill Bucket 1 (3, 0)
+
+        // Move 2: 
+        // Fill Bucket 2 (0, 3)
+
+        // Move 3:
+        // Fill Bucket 1 (3, 3)
+
+        // Move 4:
+        // Fill Bucket 2 (1, 5)
+    };
+    bucket_amounts_hm.insert(1, new_bucket_one_amount);
+    bucket_amounts_hm.insert(2, new_bucket_two_amount);
+    println!("move #{}: ", moves + 1);
+    println!("({}, {})", bucket_amounts_hm[&1], bucket_amounts_hm[&2]);
+    moves + 1
 }
 
-fn check_solved(bucket_amounts: (u8, u8), goal: u8) -> bool {
-    println!("check_solved is called, here are the args:\n bucket_amounts: ({}, {})\n goal: {}", bucket_amounts.0, bucket_amounts.1, goal);
-    println!("result of check_solved: {}", bucket_amounts.0 == goal || bucket_amounts.1 == goal);
-    bucket_amounts.0 == goal || bucket_amounts.1 == goal
+fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
+    let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
+    let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
+    
+    bucket_one_amount == goal || bucket_two_amount == goal
 }
 
-fn get_result_stats(moves: u8, bucket_amounts: (u8, u8), goal: u8) -> Option<BucketStats> {
+fn get_result_stats(moves: u8, bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> Option<BucketStats> {
+    let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
+    let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
+    let bucket_amounts = (bucket_one_amount, bucket_two_amount);
+
     let (goal_bucket, other_bucket) = match bucket_amounts {
         (1, _) => (Bucket::One, bucket_amounts.1),
         (_, 1) => (Bucket::Two, bucket_amounts.0),
@@ -139,4 +183,21 @@ fn get_result_stats(moves: u8, bucket_amounts: (u8, u8), goal: u8) -> Option<Buc
         goal_bucket,
         other_bucket
     })
+}
+
+fn get_pouring_bucket(bucket: &Bucket) -> Bucket {
+    match *bucket {
+        Bucket::One => Bucket::Two,
+        Bucket::Two => Bucket::One
+    }
+}
+
+impl fmt::Display for Bucket {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let bucket_name = match *self {
+            Bucket::One => "Bucket One",
+            Bucket::Two => "Bucket Two",
+        };
+        write!(f, "{}", bucket_name)
+    }
 }
