@@ -1,5 +1,5 @@
-use std::fmt; 
 use std::collections::HashMap;
+use std::fmt;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Bucket {
@@ -50,7 +50,10 @@ pub fn solve(
     let mut bucket_amounts_hm: HashMap<usize, u8> = HashMap::new();
     bucket_amounts_hm.insert(1, 0);
     bucket_amounts_hm.insert(2, 0);
-    println!("bucket one capacity: {}, bucket two capacity: {}", capacity_1, capacity_2);
+    println!(
+        "bucket one capacity: {}, bucket two capacity: {}",
+        capacity_1, capacity_2
+    );
 
     let mut pouring_bucket = match *start_bucket {
         Bucket::One => Bucket::One,
@@ -59,13 +62,20 @@ pub fn solve(
     let mut moves: u8 = 0;
 
     loop {
-        moves = pour(&start_bucket, &pouring_bucket, &mut bucket_amounts_hm, capacity_1, capacity_2, moves);
+        moves = pour(
+            &start_bucket,
+            &pouring_bucket,
+            &mut bucket_amounts_hm,
+            capacity_1,
+            capacity_2,
+            moves,
+        );
         pouring_bucket = get_pouring_bucket(&pouring_bucket);
-        if check_solved(&bucket_amounts_hm, goal) { 
+        if check_solved(&bucket_amounts_hm, goal) {
             break;
         }
     }
-    
+
     let result = get_result_stats(moves, &bucket_amounts_hm, goal);
     result
 }
@@ -73,7 +83,7 @@ pub fn solve(
 // Move 1:
 // Fill Bucket 1 (3, 0)
 
-// Move 2: 
+// Move 2:
 // Fill Bucket 2 (0, 3)
 
 // Move 3:
@@ -81,8 +91,15 @@ pub fn solve(
 
 // Move 4:
 // Fill Bucket 2 (1, 5)
-fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut HashMap<usize, u8>, bucket_one_capacity: u8, bucket_two_capacity: u8, moves: u8) -> u8 {
-    let bucket_one_amount = bucket_amounts_hm[&1];  
+fn pour(
+    start_bucket: &Bucket,
+    pouring_bucket: &Bucket,
+    bucket_amounts_hm: &mut HashMap<usize, u8>,
+    bucket_one_capacity: u8,
+    bucket_two_capacity: u8,
+    moves: u8,
+) -> u8 {
+    let bucket_one_amount = bucket_amounts_hm[&1];
     let bucket_two_amount = bucket_amounts_hm[&2];
     println!("pour is called, pouring from: {}", pouring_bucket);
     let (new_bucket_one_amount, new_bucket_two_amount) = match pouring_bucket {
@@ -94,7 +111,9 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
                 new_bucket_one_amount = bucket_one_capacity;
                 new_bucket_two_amount = bucket_two_amount;
             } else if bucket_one_amount + bucket_two_amount > bucket_two_capacity {
-                if bucket_one_capacity > bucket_two_capacity { return moves; }
+                if bucket_one_capacity > bucket_two_capacity {
+                    return moves;
+                }
 
                 let poured_amount = bucket_two_capacity - bucket_two_amount;
                 new_bucket_one_amount = bucket_one_amount - poured_amount;
@@ -104,7 +123,7 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
                 new_bucket_two_amount = 0;
             }
             (new_bucket_one_amount, new_bucket_two_amount)
-        },
+        }
         bucket @ Bucket::Two => {
             let new_bucket_one_amount;
             let new_bucket_two_amount;
@@ -113,7 +132,9 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
                 new_bucket_one_amount = bucket_one_amount;
                 new_bucket_two_amount = bucket_two_capacity;
             } else if bucket_one_amount + bucket_two_amount > bucket_one_capacity {
-                if bucket_two_capacity > bucket_one_capacity { return moves; }
+                if bucket_two_capacity > bucket_one_capacity {
+                    return moves;
+                }
                 let poured_amount = bucket_one_capacity - bucket_one_amount;
                 new_bucket_one_amount = bucket_one_amount + poured_amount;
                 new_bucket_two_amount = bucket_two_amount - poured_amount;
@@ -122,18 +143,17 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
                 new_bucket_two_amount = bucket_one_amount + bucket_two_amount;
             }
             (new_bucket_one_amount, new_bucket_two_amount)
-        }
-        // Move 1:
-        // Fill Bucket 1 (3, 0)
+        } // Move 1:
+          // Fill Bucket 1 (3, 0)
 
-        // Move 2: 
-        // Fill Bucket 2 (0, 3)
+          // Move 2:
+          // Fill Bucket 2 (0, 3)
 
-        // Move 3:
-        // Fill Bucket 1 (3, 3)
+          // Move 3:
+          // Fill Bucket 1 (3, 3)
 
-        // Move 4:
-        // Fill Bucket 2 (1, 5)
+          // Move 4:
+          // Fill Bucket 2 (1, 5)
     };
     bucket_amounts_hm.insert(1, new_bucket_one_amount);
     bucket_amounts_hm.insert(2, new_bucket_two_amount);
@@ -146,11 +166,15 @@ fn pour(start_bucket: &Bucket, pouring_bucket: &Bucket, bucket_amounts_hm: &mut 
 fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
     let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
     let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
-    
+
     bucket_one_amount == goal || bucket_two_amount == goal
 }
 
-fn get_result_stats(moves: u8, bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> Option<BucketStats> {
+fn get_result_stats(
+    moves: u8,
+    bucket_amounts_hm: &HashMap<usize, u8>,
+    goal: u8,
+) -> Option<BucketStats> {
     let bucket_one_amount = *bucket_amounts_hm.get(&1).unwrap();
     let bucket_two_amount = *bucket_amounts_hm.get(&2).unwrap();
     let bucket_amounts = (bucket_one_amount, bucket_two_amount);
@@ -161,19 +185,19 @@ fn get_result_stats(moves: u8, bucket_amounts_hm: &HashMap<usize, u8>, goal: u8)
         _ => {
             println!("get_result_stats is called, here are the args:\nmoves: {}\nbucket_amounts: ({}, {})\n goal: {}", moves, bucket_amounts.0, bucket_amounts.1, goal);
             return None;
-        },
+        }
     };
     Some(BucketStats {
         moves,
         goal_bucket,
-        other_bucket
+        other_bucket,
     })
 }
 
 fn get_pouring_bucket(bucket: &Bucket) -> Bucket {
     match *bucket {
         Bucket::One => Bucket::Two,
-        Bucket::Two => Bucket::One
+        Bucket::Two => Bucket::One,
     }
 }
 
