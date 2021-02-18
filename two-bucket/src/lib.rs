@@ -76,8 +76,7 @@ pub fn solve(
         }
     }
 
-    let result = get_result_stats(moves, &bucket_amounts_hm, goal);
-    result
+    get_result_stats(moves, &bucket_amounts_hm, goal)
 }
 
 // Move 1:
