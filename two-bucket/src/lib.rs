@@ -7,40 +7,13 @@ pub enum Bucket {
     Two,
 }
 
-/// A struct to hold your results in.
 #[derive(PartialEq, Eq, Debug)]
 pub struct BucketStats {
-    /// The total number of "moves" it should take to reach the desired number of liters, including
-    /// the first fill.
     pub moves: u8,
-    /// Which bucket should end up with the desired number of liters? (Either "one" or "two")
     pub goal_bucket: Bucket,
-    /// How many liters are left in the other bucket?
     pub other_bucket: u8,
 }
-// Test Case 1
 
-// solve(3, 5, 1, &Bucket::One),
-//         Some(BucketStats {
-//             moves: 4,
-//             goal_bucket: Bucket::One,
-//             other_bucket: 5,
-//         })
-
-// Test Case 2
-// solve(3, 5, 1, &Bucket::Two),
-// Some(BucketStats {
-//     moves: 8,
-//     goal_bucket: Bucket::Two,
-//     other_bucket: 3,
-// })
-
-// Move 1
-// Bucket Two
-// (0, 5)
-// Bucket 1
-// (3, 2)
-/// Solve the bucket problem
 pub fn solve(
     capacity_1: u8,
     capacity_2: u8,
@@ -48,6 +21,7 @@ pub fn solve(
     start_bucket: &Bucket,
 ) -> Option<BucketStats> {
     let mut bucket_amounts_hm: HashMap<usize, u8> = HashMap::new();
+    // set default values for bucket 1 and bucket 2
     bucket_amounts_hm.insert(1, 0);
     bucket_amounts_hm.insert(2, 0);
     println!(
@@ -55,22 +29,22 @@ pub fn solve(
         capacity_1, capacity_2
     );
 
-    let mut pouring_bucket = match *start_bucket {
+    let mut receiving_bucket = match *start_bucket {
         Bucket::One => Bucket::One,
         Bucket::Two => Bucket::Two,
     };
     let mut moves: u8 = 0;
-
     loop {
-        moves = pour(
+        moves += 1;
+        pour(
             &start_bucket,
-            &pouring_bucket,
+            &receiving_bucket,
             &mut bucket_amounts_hm,
             capacity_1,
             capacity_2,
             moves,
         );
-        pouring_bucket = get_pouring_bucket(&pouring_bucket);
+        receiving_bucket = get_receiving_bucket(&receiving_bucket);
         if check_solved(&bucket_amounts_hm, goal) {
             break;
         }
@@ -79,87 +53,66 @@ pub fn solve(
     get_result_stats(moves, &bucket_amounts_hm, goal)
 }
 
-// Move 1:
-// Fill Bucket 1 (3, 0)
-
-// Move 2:
-// Fill Bucket 2 (0, 3)
-
-// Move 3:
-// Fill Bucket 1 (3, 3)
-
-// Move 4:
-// Fill Bucket 2 (1, 5)
 fn pour(
     start_bucket: &Bucket,
-    pouring_bucket: &Bucket,
+    receiving_bucket: &Bucket,
     bucket_amounts_hm: &mut HashMap<usize, u8>,
     bucket_one_capacity: u8,
     bucket_two_capacity: u8,
-    moves: u8,
-) -> u8 {
+    current_move: u8,
+) {
     let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
 
-    println!("pour is called, pouring from: {}", pouring_bucket);
-    let (new_bucket_one_amount, new_bucket_two_amount) = match pouring_bucket {
-        bucket @ Bucket::One => {
-            let new_bucket_one_amount;
-            let new_bucket_two_amount;
+    println!("pour is called, pouring into: {}", receiving_bucket);
+    let (mut pouring_bucket_amount, mut receiving_bucket_amount, receiving_bucket_capacity) =
+        match receiving_bucket {
+            Bucket::One => (bucket_two_amount, bucket_one_amount, bucket_one_capacity),
+            Bucket::Two => (bucket_one_amount, bucket_two_amount, bucket_two_capacity),
+        };
 
-            if start_bucket == bucket && bucket_one_amount == 0 {
-                new_bucket_one_amount = bucket_one_capacity;
-                new_bucket_two_amount = bucket_two_amount;
-            } else if bucket_one_amount + bucket_two_amount > bucket_two_capacity {
-                if bucket_one_capacity > bucket_two_capacity {
-                    return moves;
-                }
+    // let (new_bucket_one_amount, new_bucket_two_amount) = match receiving_bucket {
+    //     receiving_bucket @ Bucket::One => {
+    //         let new_bucket_one_amount;
+    //         let new_bucket_two_amount;
 
-                let poured_amount = bucket_two_capacity - bucket_two_amount;
-                new_bucket_one_amount = bucket_one_amount - poured_amount;
-                new_bucket_two_amount = bucket_two_amount + poured_amount;
-            } else {
-                new_bucket_one_amount = bucket_one_amount + bucket_two_amount;
-                new_bucket_two_amount = 0;
-            }
-            (new_bucket_one_amount, new_bucket_two_amount)
-        }
-        bucket @ Bucket::Two => {
-            let new_bucket_one_amount;
-            let new_bucket_two_amount;
+    //         if start_bucket == receiving_bucket && bucket_one_amount == 0 {
+    //             new_bucket_one_amount = bucket_one_capacity;
+    //             new_bucket_two_amount = bucket_two_amount;
+    //         } else if bucket_one_amount + bucket_two_amount > bucket_one_capacity {
+    //             let poured_amount = bucket_one_capacity - bucket_one_amount;
+    //             new_bucket_one_amount = bucket_one_amount + poured_amount;
+    //             new_bucket_two_amount = bucket_two_amount - poured_amount;
+    //         } else {
+    //             new_bucket_one_amount = bucket_one_amount + bucket_two_amount;
+    //             new_bucket_two_amount = 0;
+    //         }
+    //         (new_bucket_one_amount, new_bucket_two_amount)
+    //     }
+    // };
 
-            if start_bucket == bucket && bucket_two_amount == 0 {
-                new_bucket_one_amount = bucket_one_amount;
-                new_bucket_two_amount = bucket_two_capacity;
-            } else if bucket_one_amount + bucket_two_amount > bucket_one_capacity {
-                if bucket_two_capacity > bucket_one_capacity {
-                    return moves;
-                }
-                let poured_amount = bucket_one_capacity - bucket_one_amount;
-                new_bucket_one_amount = bucket_one_amount + poured_amount;
-                new_bucket_two_amount = bucket_two_amount - poured_amount;
-            } else {
-                new_bucket_one_amount = 0;
-                new_bucket_two_amount = bucket_one_amount + bucket_two_amount;
-            }
-            (new_bucket_one_amount, new_bucket_two_amount)
-        } // Move 1:
-          // Fill Bucket 1 (3, 0)
-
-          // Move 2:
-          // Fill Bucket 2 (0, 3)
-
-          // Move 3:
-          // Fill Bucket 1 (3, 3)
-
-          // Move 4:
-          // Fill Bucket 2 (1, 5)
+    // if initial pour
+    if receiving_bucket_amount == 0 {
+        receiving_bucket_amount = receiving_bucket_capacity;
+    } else if bucket_one_amount + bucket_two_amount > receiving_bucket_capacity {
+        let poured_amount = receiving_bucket_capacity - receiving_bucket_amount;
+        pouring_bucket_amount -= poured_amount;
+        receiving_bucket_amount += poured_amount;
+    }
+    let (new_bucket_one_amount, new_bucket_two_amount) = match current_move % 2 == 1 {
+        true => match *start_bucket {
+            Bucket::One => (pouring_bucket_amount, receiving_bucket_amount),
+            Bucket::Two => (pouring_bucket_amount, receiving_bucket_amount),
+        },
+        false => match *start_bucket {
+            Bucket::One => (pouring_bucket_amount, receiving_bucket_amount),
+            Bucket::Two => (receiving_bucket_amount, pouring_bucket_amount),
+        },
     };
+
     bucket_amounts_hm.insert(1, new_bucket_one_amount);
     bucket_amounts_hm.insert(2, new_bucket_two_amount);
-    println!("move #{}: ", moves + 1);
+    println!("move #{}: ", current_move);
     println!("({}, {})", bucket_amounts_hm[&1], bucket_amounts_hm[&2]);
-
-    moves + 1
 }
 
 fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
@@ -191,7 +144,7 @@ fn get_result_stats(
     })
 }
 
-fn get_pouring_bucket(bucket: &Bucket) -> Bucket {
+fn get_receiving_bucket(bucket: &Bucket) -> Bucket {
     match *bucket {
         Bucket::One => Bucket::Two,
         Bucket::Two => Bucket::One,
