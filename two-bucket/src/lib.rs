@@ -15,22 +15,6 @@ pub struct BucketStats {
     pub other_bucket: u8,
 }
 
-// TEST 2 (3, 5, 1, &Bucket::Two) -> 8
-// 2 (0, 5)
-// 1 (3, 2) -> bucket 1 + bucket 2 = bucket 2 capacity
-// 2 (0, 2)
-//   (2, 0)
-//   (2, 5)
-//   (3, 4)
-//   (0, 4)
-//   (3, 1)
-
-// TEST 1 (3, 5, 1, &Bucket::One) -> 4
-// 1 (3, 0)
-// 2 (0, 3)
-// 1 (3, 3)
-// 2 (1, 5)
-
 pub fn solve(
     capacity_1: u8,
     capacity_2: u8,
@@ -47,11 +31,10 @@ pub fn solve(
         moves += 1;
         println!("move #{}", moves);
         pour(&mut bucket_amounts_hm, capacity_1, capacity_2, start_bucket);
-        if moves == 8 || check_solved(&bucket_amounts_hm, goal) {
+        if check_solved(&bucket_amounts_hm, goal) {
             break;
         }
     }
-
     get_result_stats(moves, &bucket_amounts_hm, goal)
 }
 
@@ -89,7 +72,6 @@ fn pour(
             (0, 0)
         }
 
-        // done
         (0, 0) => {
             // handles first turn
             match *start_bucket {
@@ -190,6 +172,7 @@ fn pour(
 
 fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
     let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
+
     bucket_one_amount == goal
         || bucket_two_amount == goal
         || (bucket_one_amount == 0 && bucket_two_amount == 0)
