@@ -25,7 +25,6 @@ fn test_case_2() {
 }
 
 #[test]
-#[ignore]
 fn test_case_3() {
     assert_eq!(
         solve(7, 11, 2, &Bucket::One),
