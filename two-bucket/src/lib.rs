@@ -59,12 +59,12 @@ pub fn solve(
 //2 (0, 7)
 //3 (7, 7)
 //4 (3, 11) -> bucket two remainder will be bucket one capacity if I pour from two into one
-//5 (3, 0) 
+//5 (3, 0)
 //6 (0, 3)
 //7 (7, 3)
 //8 (0, 10)
 //9 (7, 10)
-//10 (6, 11) 
+//10 (6, 11)
 //11 (6, 0) -> error here currently shows (7, 10)
 //12 (0, 6)
 //13 (7, 6)
@@ -81,14 +81,6 @@ fn pour(
     // consider all 9 cases
 
     let new_bucket_amounts = match get_bucket_amounts(bucket_amounts_hm) {
-        // THIS SHOULDNT HAPPEN. if it does, throw 0,0 which will result in None
-        (bucket_one_amount, bucket_two_amount)
-            if bucket_one_amount == bucket_one_capacity
-                && bucket_two_amount == bucket_two_capacity =>
-        {
-            (0, 0)
-        }
-
         (0, 0) => {
             // handles first turn
             match *start_bucket {
@@ -128,7 +120,8 @@ fn pour(
                 }
                 Ordering::Less => match *start_bucket {
                     Bucket::One => {
-                        let poured_amount = min(bucket_two_capacity - bucket_two_amount, bucket_one_amount);
+                        let poured_amount =
+                            min(bucket_two_capacity - bucket_two_amount, bucket_one_amount);
                         (
                             bucket_one_amount - poured_amount,
                             bucket_two_amount + poured_amount,
@@ -158,13 +151,16 @@ fn pour(
                     if bucket_two_remainder == bucket_one_capacity {
                         match *start_bucket {
                             Bucket::Two => (0, bucket_two_amount),
-                            Bucket::One => (bucket_one_amount, 0)
+                            Bucket::One => (bucket_one_amount, 0),
                         }
                     } else {
-                        (
-                            bucket_one_amount + poured_amount,
-                            bucket_two_amount - poured_amount,
-                        )
+                        match *start_bucket {
+                            Bucket::Two => (
+                                bucket_one_amount + poured_amount,
+                                bucket_two_amount - poured_amount,
+                            ),
+                            Bucket::One => (bucket_one_amount, 0),
+                        }
                     }
                 }
             }
