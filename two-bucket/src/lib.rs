@@ -31,7 +31,7 @@ pub fn solve(
         moves += 1;
         println!("move #{}", moves);
         pour(&mut bucket_amounts_hm, capacity_1, capacity_2, start_bucket);
-        if moves == 14 || check_solved(&bucket_amounts_hm, goal) {
+        if check_solved(&bucket_amounts_hm, goal) {
             break;
         }
     }

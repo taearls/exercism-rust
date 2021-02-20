@@ -37,7 +37,6 @@ fn test_case_3() {
 }
 
 #[test]
-#[ignore]
 fn test_case_4() {
     assert_eq!(
         solve(7, 11, 2, &Bucket::Two),
@@ -50,7 +49,6 @@ fn test_case_4() {
 }
 
 #[test]
-#[ignore]
 fn goal_equal_to_start_bucket() {
     assert_eq!(
         solve(1, 3, 3, &Bucket::Two),
@@ -76,13 +74,11 @@ fn goal_equal_to_other_bucket() {
 }
 
 #[test]
-#[ignore]
 fn not_possible_to_reach_the_goal() {
     assert_eq!(solve(6, 15, 5, &Bucket::One), None);
 }
 
 #[test]
-#[ignore]
 fn with_same_buckets_but_different_goal_then_it_is_possible() {
     assert_eq!(
         solve(6, 15, 9, &Bucket::One),
