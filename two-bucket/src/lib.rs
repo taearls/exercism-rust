@@ -1,6 +1,5 @@
 use std::cmp::{min, Ordering};
 use std::collections::HashMap;
-use std::fmt;
 
 #[derive(PartialEq, Eq, Debug)]
 pub enum Bucket {
@@ -22,63 +21,37 @@ pub fn solve(
     start_bucket: &Bucket,
 ) -> Option<BucketStats> {
     let mut bucket_amounts_hm: HashMap<usize, u8> = HashMap::new();
+    // define default values
     bucket_amounts_hm.insert(1, 0);
     bucket_amounts_hm.insert(2, 0);
 
     let mut moves: u8 = 0;
-    println!("start_bucket: {}", start_bucket);
     loop {
         moves += 1;
-        println!("move #{}", moves);
-        pour(&mut bucket_amounts_hm, capacity_1, capacity_2, start_bucket);
+        pour(
+            &mut bucket_amounts_hm,
+            capacity_1,
+            capacity_2,
+            goal,
+            start_bucket,
+        );
         if check_solved(&bucket_amounts_hm, goal) {
             break;
         }
     }
-    get_result_stats(moves, &bucket_amounts_hm, goal)
+    get_result_bucket_stats(moves, &bucket_amounts_hm, goal)
 }
-
-// TEST 1 (3, 5, 1, &Bucket::One) -> (4, Bucket::One, 5)
-// (3, 0)
-// (0, 3)
-// (3, 3)
-// (1, 5)
-
-// TEST 2 (3, 5, 1, &Bucket::Two) -> (8, Bucket::Two, 3)
-// (0, 5)
-// (3, 2) -> bucket 1 + bucket 2 = bucket 2 capacity
-// (0, 2)
-// (2, 0)
-// (2, 5)
-// (3, 4)
-// (0, 4)
-// (3, 1)
-
-// Test 3 (7, 11, 2, &Bucket::One) -> (14, Bucket::One, 11)
-//1 (7, 0)
-//2 (0, 7)
-//3 (7, 7)
-//4 (3, 11) -> bucket two remainder will be bucket one capacity if I pour from two into one
-//5 (3, 0)
-//6 (0, 3)
-//7 (7, 3)
-//8 (0, 10)
-//9 (7, 10)
-//10 (6, 11)
-//11 (6, 0) -> error here currently shows (7, 10)
-//12 (0, 6)
-//13 (7, 6)
-//14 (2, 11)
 
 fn pour(
     bucket_amounts_hm: &mut HashMap<usize, u8>,
     bucket_one_capacity: u8,
     bucket_two_capacity: u8,
+    goal: u8,
     start_bucket: &Bucket,
 ) {
     // three scenarios for each bucket amount
     // empty, full, or in between
-    // consider all 9 cases
+    // one bucket has to be either 0 or full, or else this is not solvable
 
     let new_bucket_amounts = match get_bucket_amounts(bucket_amounts_hm) {
         (0, 0) => {
@@ -93,8 +66,14 @@ fn pour(
                 // if we started with bucket one being filled, can't have bucket one empty and bucket one full
                 Bucket::One => (0, 0),
                 Bucket::Two => {
-                    let poured_amount = min(bucket_one_capacity, bucket_two_amount);
-                    (poured_amount, bucket_two_amount - poured_amount)
+                    // if filling bucket one reaches the goal, let's do that immediately
+                    if bucket_one_capacity == goal {
+                        (bucket_one_capacity, bucket_two_amount)
+                    } else {
+                        // handles if bucket one capacity is bigger than bucket two capacity
+                        let poured_amount = min(bucket_one_capacity, bucket_two_amount);
+                        (poured_amount, bucket_two_amount - poured_amount)
+                    }
                 }
             }
         }
@@ -102,8 +81,14 @@ fn pour(
             match *start_bucket {
                 // if we started with bucket one being filled, can't have bucket two empty and bucket one full
                 Bucket::One => {
-                    let poured_amount = min(bucket_one_amount, bucket_two_capacity);
-                    (bucket_one_amount - poured_amount, poured_amount)
+                    // if filling bucket two reaches the goal, let's do that immediately
+                    if bucket_two_capacity == goal {
+                        (bucket_one_amount, bucket_two_capacity)
+                    } else {
+                        // handles if bucket two capacity is bigger than bucket one capacity
+                        let poured_amount = min(bucket_one_amount, bucket_two_capacity);
+                        (bucket_one_amount - poured_amount, poured_amount)
+                    }
                 }
                 Bucket::Two => (0, 0),
             }
@@ -113,13 +98,22 @@ fn pour(
                 Ordering::Equal => (0, 0),
                 Ordering::Greater => {
                     let poured_amount = bucket_one_capacity - bucket_two_amount;
-                    (
-                        bucket_one_amount + poured_amount,
-                        bucket_two_amount - poured_amount,
-                    )
+                    let bucket_one_remainder = bucket_one_amount - poured_amount;
+
+                    if *start_bucket == Bucket::Two {
+                        (0, bucket_two_amount)
+                    } else if bucket_one_remainder == bucket_two_capacity {
+                        (bucket_one_amount, 0)
+                    } else {
+                        (
+                            bucket_one_amount + poured_amount,
+                            bucket_two_amount - poured_amount,
+                        )
+                    }
                 }
                 Ordering::Less => match *start_bucket {
                     Bucket::One => {
+                        // handles if remaining space in bucket two is bigger than bucket one
                         let poured_amount =
                             min(bucket_two_capacity - bucket_two_amount, bucket_one_amount);
                         (
@@ -137,7 +131,9 @@ fn pour(
                 Ordering::Greater => match *start_bucket {
                     Bucket::One => (bucket_one_amount, 0),
                     Bucket::Two => {
-                        let poured_amount = bucket_two_capacity - bucket_two_amount;
+                        // handles if remaining space in bucket two is bigger than bucket one
+                        let poured_amount =
+                            min(bucket_two_capacity - bucket_two_amount, bucket_one_amount);
                         (
                             bucket_one_amount - poured_amount,
                             bucket_two_amount + poured_amount,
@@ -147,10 +143,9 @@ fn pour(
                 Ordering::Less => {
                     let poured_amount = bucket_one_capacity - bucket_one_amount;
                     let bucket_two_remainder = bucket_two_amount - poured_amount;
-                    
+
                     if *start_bucket == Bucket::One {
                         (bucket_one_amount, 0)
-                    // if pouring from one bucket to another causes them to equal each other, we should empty instead.
                     } else if bucket_two_remainder == bucket_one_capacity {
                         (0, bucket_two_amount)
                     } else {
@@ -162,7 +157,6 @@ fn pour(
                 }
             }
         }
-
         (0, bucket_two_amount) => match *start_bucket {
             Bucket::One => (bucket_one_capacity, bucket_two_amount),
             Bucket::Two => {
@@ -179,16 +173,14 @@ fn pour(
             }
             Bucket::Two => (bucket_one_amount, bucket_two_capacity),
         },
-
-        // catch all. not sure if I need to add logic for this
         _ => (0, 0),
     };
-
     bucket_amounts_hm.insert(1, new_bucket_amounts.0);
     bucket_amounts_hm.insert(2, new_bucket_amounts.1);
-    println!("({}, {})", bucket_amounts_hm[&1], bucket_amounts_hm[&2]);
 }
 
+// checks if bucket one amount or bucket two amount matches the goal
+// if bucket amounts are (0, 0) we've determined we can't solve it
 fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
     let (bucket_one_amount, bucket_two_amount) = get_bucket_amounts(bucket_amounts_hm);
 
@@ -197,7 +189,7 @@ fn check_solved(bucket_amounts_hm: &HashMap<usize, u8>, goal: u8) -> bool {
         || (bucket_one_amount == 0 && bucket_two_amount == 0)
 }
 
-fn get_result_stats(
+fn get_result_bucket_stats(
     moves: u8,
     bucket_amounts_hm: &HashMap<usize, u8>,
     goal: u8,
@@ -219,14 +211,4 @@ fn get_result_stats(
 
 fn get_bucket_amounts(bucket_amounts_hm: &HashMap<usize, u8>) -> (u8, u8) {
     (bucket_amounts_hm[&1], bucket_amounts_hm[&2])
-}
-
-impl fmt::Display for Bucket {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let bucket_name = match *self {
-            Bucket::One => "Bucket One",
-            Bucket::Two => "Bucket Two",
-        };
-        write!(f, "{}", bucket_name)
-    }
 }
