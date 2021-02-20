@@ -147,20 +147,17 @@ fn pour(
                 Ordering::Less => {
                     let poured_amount = bucket_one_capacity - bucket_one_amount;
                     let bucket_two_remainder = bucket_two_amount - poured_amount;
+                    
+                    if *start_bucket == Bucket::One {
+                        (bucket_one_amount, 0)
                     // if pouring from one bucket to another causes them to equal each other, we should empty instead.
-                    if bucket_two_remainder == bucket_one_capacity {
-                        match *start_bucket {
-                            Bucket::Two => (0, bucket_two_amount),
-                            Bucket::One => (bucket_one_amount, 0),
-                        }
+                    } else if bucket_two_remainder == bucket_one_capacity {
+                        (0, bucket_two_amount)
                     } else {
-                        match *start_bucket {
-                            Bucket::Two => (
-                                bucket_one_amount + poured_amount,
-                                bucket_two_amount - poured_amount,
-                            ),
-                            Bucket::One => (bucket_one_amount, 0),
-                        }
+                        (
+                            bucket_one_amount + poured_amount,
+                            bucket_two_amount - poured_amount,
+                        )
                     }
                 }
             }
