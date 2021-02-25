@@ -7,7 +7,6 @@ fn empty_spiral() {
 }
 
 #[test]
-#[ignore]
 fn size_one_spiral() {
     let mut expected: Vec<Vec<u32>> = Vec::new();
     expected.push(vec![1]);
