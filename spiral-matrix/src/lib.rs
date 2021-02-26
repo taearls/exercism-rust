@@ -9,7 +9,7 @@ pub fn spiral_matrix(size: u32) -> Vec<Vec<u32>> {
     let mut direction: Direction = Direction::Right;
     let mut empty_elements = square_width * square_width;
 
-    // top_left_bound needs to be one row down so it doesn't match starting position
+    // top_left_bound needs to be initialized one row down so it doesn't match starting position
     let mut top_left_bound = (1, 0);
     let mut top_right_bound = (0, square_width - 1);
     let mut bottom_right_bound = (square_width - 1, square_width - 1);
@@ -20,21 +20,19 @@ pub fn spiral_matrix(size: u32) -> Vec<Vec<u32>> {
             break;
         }
         let (row, col) = current_position;
-        println!("({}, {})", row, col);
-        println!("direction: {}", direction);
         matrix[row][col] = num;
 
         num += 1;
         empty_elements -= 1;
 
-        if (current_position == top_left_bound)
+        if current_position == top_left_bound
             || current_position == top_right_bound
             || current_position == bottom_right_bound
             || current_position == bottom_left_bound
         {
             direction = match direction {
                 Direction::Up => {
-                    top_left_bound = (top_left_bound.0 + 1, top_left_bound.0 + 1);
+                    top_left_bound = (top_left_bound.0 + 1, top_left_bound.1 + 1);
                     Direction::Right
                 }
                 Direction::Right => {
@@ -72,16 +70,4 @@ enum Direction {
     Right,
     Down,
     Left,
-}
-
-impl std::fmt::Display for Direction {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let direction = match *self {
-            Direction::Right => "Right",
-            Direction::Left => "Left",
-            Direction::Up => "Up",
-            Direction::Down => "Down",
-        };
-        write!(f, "{}", direction)
-    }
 }

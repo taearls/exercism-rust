@@ -38,7 +38,6 @@ fn size_four_spiral() {
     assert_eq!(spiral_matrix(4), expected);
 }
 #[test]
-#[ignore]
 fn size_five_spiral() {
     let mut expected: Vec<Vec<u32>> = Vec::new();
     expected.push(vec![1, 2, 3, 4, 5]);
