@@ -4,10 +4,8 @@ pub fn spiral_matrix(size: u32) -> Vec<Vec<u32>> {
     if size == 0 {
         return matrix;
     }
-    let mut num: u32 = 1;
     let mut current_position: (usize, usize) = (0, 0);
     let mut direction: Direction = Direction::Right;
-    let mut empty_elements = square_width * square_width;
 
     // top_left_bound needs to be initialized one row down so it doesn't match starting position
     let mut top_left_bound = (1, 0);
@@ -15,21 +13,17 @@ pub fn spiral_matrix(size: u32) -> Vec<Vec<u32>> {
     let mut bottom_right_bound = (square_width - 1, square_width - 1);
     let mut bottom_left_bound = (square_width - 1, 0);
 
-    loop {
-        if empty_elements == 0 {
-            break;
-        }
+    for num in 1..=(size * size) {
         let (row, col) = current_position;
         matrix[row][col] = num;
 
-        num += 1;
-        empty_elements -= 1;
-
+        // check if we need to turn
         if current_position == top_left_bound
             || current_position == top_right_bound
             || current_position == bottom_right_bound
             || current_position == bottom_left_bound
         {
+            // handle turn, update appropriate boundary
             direction = match direction {
                 Direction::Up => {
                     top_left_bound = (top_left_bound.0 + 1, top_left_bound.1 + 1);
