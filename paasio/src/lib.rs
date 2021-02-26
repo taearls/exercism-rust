@@ -15,7 +15,7 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn get_ref(&self) -> &R {
-        unimplemented!()
+        &self.data
     }
 
     pub fn bytes_through(&self) -> usize {
@@ -29,7 +29,10 @@ impl<R: Read> ReadStats<R> {
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        unimplemented!("Collect statistics about this call reading {:?}", buf)
+        // if self.data.len() > buf.len() {
+        //     return Err(buf.len());
+        // }
+        Ok(buf.len())
     }
 }
 
@@ -48,7 +51,7 @@ impl<W: Write> WriteStats<W> {
     }
 
     pub fn get_ref(&self) -> &W {
-        unimplemented!()
+        &self.data
     }
 
     pub fn bytes_through(&self) -> usize {
