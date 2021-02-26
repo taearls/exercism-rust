@@ -13,7 +13,6 @@ fn size_one_spiral() {
     assert_eq!(spiral_matrix(1), expected);
 }
 #[test]
-#[ignore]
 fn size_two_spiral() {
     let mut expected: Vec<Vec<u32>> = Vec::new();
     expected.push(vec![1, 2]);
