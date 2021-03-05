@@ -12,18 +12,21 @@ macro_rules! test_read {
             fn test_read_passthrough() {
                 let data = $input;
                 let size = $len(&data);
+                println!("size: {}", size);
                 let mut reader = ReadStats::new(data);
 
                 let mut buffer = Vec::with_capacity(size);
                 let qty_read = reader.read_to_end(&mut buffer);
-
+                println!("buffer.len(): {}", buffer.len());
                 assert!(qty_read.is_ok());
+                // println!("qty_read: {}", qty_read);
                 assert_eq!(size, qty_read.unwrap());
                 assert_eq!(size, buffer.len());
                 // 2: first to read all the data, second to check that
                 // there wasn't any more pending data which simply didn't
                 // fit into the existing buffer
                 assert_eq!(2, reader.reads());
+
                 assert_eq!(size, reader.bytes_through());
             }
 
@@ -158,7 +161,7 @@ fn test_create_stats() {
     let _ = paasio::WriteStats::new(data.as_mut_slice());
 }
 
-test_read!(#[ignore] read_string (
+test_read!(read_string (
     "Twas brillig, and the slithy toves/Did gyre and gimble in the wabe:/All mimsy were the borogoves,/And the mome raths outgrabe.".as_bytes(),
     |d: &[u8]| d.len()
 ));
@@ -168,7 +171,6 @@ test_write!(#[ignore] write_string (
 ));
 
 test_read!(
-    #[ignore]
     read_byte_literal(
         &[1_u8, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144][..],
         |d: &[u8]| d.len()
@@ -183,7 +185,6 @@ test_write!(
 );
 
 test_read!(
-    #[ignore]
     read_file(
         ::std::fs::File::open("README.md").expect("readme must be present"),
         |f: &::std::fs::File| f.metadata().expect("metadata must be present").len() as usize

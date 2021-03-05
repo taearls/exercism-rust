@@ -2,7 +2,7 @@ use std::io::{Read, Result, Write};
 
 pub struct ReadStats<R>{
     data: R,
-    bytes_through: usize,
+    bytes_thru: usize,
     reads: usize,
 }
 
@@ -11,9 +11,12 @@ impl<R: Read> ReadStats<R> {
     // can't be passed through format!(). For actual implementation you will likely
     // wish to remove the leading underscore so the variable is not ignored.
     pub fn new(wrapped: R) -> ReadStats<R> {
+        // for byte in wrapped.bytes() {
+        //     data_bytes += 1;
+        // }
         ReadStats {
             data: wrapped,
-            bytes_through: 0,
+            bytes_thru: 0,
             reads: 0,
         }
     }
@@ -23,7 +26,7 @@ impl<R: Read> ReadStats<R> {
     }
 
     pub fn bytes_through(&self) -> usize {
-        self.bytes_through
+        self.bytes_thru
     }
 
     pub fn reads(&self) -> usize {
@@ -33,15 +36,17 @@ impl<R: Read> ReadStats<R> {
 
 impl<R: Read> Read for ReadStats<R> {
     fn read(&mut self, buf: &mut [u8]) -> Result<usize> {
-        // TODO: handle errors
-        // TODO: update bytes_through, update reads
-        Ok(buf.len())
+        self.reads += 1;
+        self.data.read(buf).map(|bytes| {
+            self.bytes_thru += bytes;
+            bytes
+        })   
     }
 }
 
 pub struct WriteStats<W>{
     data: W,
-    bytes_through: usize,
+    bytes_thru: usize,
     writes: usize,
 }
 
@@ -52,7 +57,7 @@ impl<W: Write> WriteStats<W> {
     pub fn new(wrapped: W) -> WriteStats<W> {
         WriteStats {
             data: wrapped,
-            bytes_through: 0,
+            bytes_thru: 0,
             writes: 0,
         }
     }
@@ -62,7 +67,7 @@ impl<W: Write> WriteStats<W> {
     }
 
     pub fn bytes_through(&self) -> usize {
-        self.bytes_through
+        self.bytes_thru
     }
 
     pub fn writes(&self) -> usize {
@@ -72,7 +77,11 @@ impl<W: Write> WriteStats<W> {
 
 impl<W: Write> Write for WriteStats<W> {
     fn write(&mut self, buf: &[u8]) -> Result<usize> {
-        unimplemented!("Collect statistics about this call writing {:?}", buf)
+        self.writes += 1;
+        self.data.write(buf).map(|bytes| {
+            self.bytes_thru = bytes;
+            bytes
+        })
     }
 
     fn flush(&mut self) -> Result<()> {
