@@ -8,12 +8,11 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
     let split: Vec<&str> = input.split(" == ").collect();
 
     // safe since we validate that " == " is in this &str at top of fn
-    let ls = unsafe { split.get_unchecked(0) };
+    let ls = split.get(0).unwrap();
     let ls_words: Vec<&str> = ls.split(" + ").collect();
 
-    let rs = unsafe { split.get_unchecked(1) };
+    let rs = split.get(1).unwrap();
 
-    
     // set default values to check 0 - 9
     // filter out 0 for leading chars in multi-digit nums 
 
@@ -21,8 +20,11 @@ pub fn solve(input: &str) -> Option<HashMap<char, u8>> {
 
     // figure out which chars I need to check
     for c in input.chars() {
-        if !result.contains_key(&c) {
-            result.insert(c, 0);
+        if c.is_alphabetic() {
+            // if !result.contains_key(&c) {
+            //     result.insert(c, 0);
+            // } 
+            *result.entry(c).or_insert(0) += 1;
         }
     }
     if !(1..=10).contains(&result.len()) {
