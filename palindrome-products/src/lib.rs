@@ -16,9 +16,7 @@ impl Palindrome {
         self.value
     }
 
-    pub fn insert(&mut self, a: u64, b: u64) {
-        
-    }
+    pub fn insert(&mut self, _a: u64, _b: u64) {}
 
     pub fn is_palindrome(num: u64) -> bool {
         let str: String = num.to_string();
