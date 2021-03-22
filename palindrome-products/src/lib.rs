@@ -7,9 +7,7 @@ pub struct Palindrome {
 
 impl Palindrome {
     pub fn new(a: u64, b: u64) -> Palindrome {
-        Palindrome {
-            value: a * b,
-        }
+        Palindrome { value: a * b }
     }
 
     pub fn value(&self) -> u64 {
@@ -26,8 +24,8 @@ impl Palindrome {
 }
 
 pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome)> {
-    if min > max { 
-        return None; 
+    if min > max {
+        return None;
     }
     let mut min_iter = min;
     let mut min_palindrome: Option<Palindrome> = None;
@@ -39,27 +37,30 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
                 if min_palindrome.is_none() {
                     min_palindrome = Some(new_palindrome);
                 } else if max_palindrome.is_none() {
-                    match min_palindrome.as_mut().unwrap().value().cmp(&new_palindrome.value()) {
+                    match min_palindrome
+                        .as_mut()
+                        .unwrap()
+                        .value()
+                        .cmp(&new_palindrome.value())
+                    {
                         Ordering::Less | Ordering::Equal => {
                             max_palindrome = Some(new_palindrome);
-                        },
+                        }
                         Ordering::Greater => {
                             max_palindrome = min_palindrome;
                             min_palindrome = Some(new_palindrome);
-                        },
+                        }
                     }
-                } else {
-                    if new_palindrome.value() < min_palindrome.as_mut().unwrap().value() {
-                        min_palindrome = Some(new_palindrome);
-                    } else if new_palindrome.value() > max_palindrome.as_mut().unwrap().value() {
-                        max_palindrome = Some(new_palindrome);
-                    }
+                } else if new_palindrome.value() < min_palindrome.as_mut().unwrap().value() {
+                    min_palindrome = Some(new_palindrome);
+                } else if new_palindrome.value() > max_palindrome.as_mut().unwrap().value() {
+                    max_palindrome = Some(new_palindrome);
                 }
             }
         }
         min_iter += 1;
     }
-    
+
     if min_palindrome.is_none() || max_palindrome.is_none() {
         return None;
     }
