@@ -28,7 +28,6 @@ fn test_finds_the_smallest_palindrome_from_single_digit_factors() {
 }
 
 #[test]
-#[ignore]
 /// finds the largest palindrome from single digit factors
 fn test_finds_the_largest_palindrome_from_single_digit_factors() {
     let mut expect = Palindrome::new(1, 9);
@@ -37,28 +36,24 @@ fn test_finds_the_largest_palindrome_from_single_digit_factors() {
 }
 
 #[test]
-#[ignore]
 /// find the smallest palindrome from double digit factors
 fn test_find_the_smallest_palindrome_from_double_digit_factors() {
     process_smallest_case((10, 99), Some(Palindrome::new(11, 11)));
 }
 
 #[test]
-#[ignore]
 /// find the largest palindrome from double digit factors
 fn test_find_the_largest_palindrome_from_double_digit_factors() {
     process_largest_case((10, 99), Some(Palindrome::new(91, 99)));
 }
 
 #[test]
-#[ignore]
 /// find smallest palindrome from triple digit factors
 fn test_find_smallest_palindrome_from_triple_digit_factors() {
     process_smallest_case((100, 999), Some(Palindrome::new(101, 101)));
 }
 
 #[test]
-#[ignore]
 /// find the largest palindrome from triple digit factors
 fn test_find_the_largest_palindrome_from_triple_digit_factors() {
     process_largest_case((100, 999), Some(Palindrome::new(913, 993)));
