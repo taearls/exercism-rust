@@ -16,12 +16,15 @@ pub fn find_saddle_points(input: &[Vec<u64>]) -> Vec<(usize, usize)> {
     if row_count > 0 {
         for row in 0..row_count {
             let current_row = input.get(row).unwrap().to_vec();
-            let max_row_val = &current_row.iter().max().unwrap();
+            let max_row_val = match current_row.iter().max() {
+                Some(val) => val,
+                None => continue,
+            };
             println!("max_row_val: {}", max_row_val);
 
             // iterate through items in row
             for current_row_value in &current_row {
-                if current_row_value == *max_row_val {
+                if current_row_value == max_row_val {
                     // only check cols of row element that matches max value
                     // calculate once using hashmap entry api
                     let current_col_index = || {
