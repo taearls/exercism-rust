@@ -28,7 +28,6 @@ fn identify_lack_of_saddle_point() {
 }
 
 #[test]
-#[ignore]
 fn multiple_saddle_points_in_col() {
     let input = vec![vec![4, 5, 4], vec![3, 5, 5], vec![1, 5, 4]];
     assert_eq!(
