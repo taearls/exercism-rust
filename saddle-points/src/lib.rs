@@ -1,10 +1,3 @@
-// vec![vec![9, 8, 7], vec![5, 3, 2], vec![6, 6, 7]];
-// [
-//    [9, 8, 7],
-//    [5, 3, 2],
-//    [6, 6, 7],
-// ]
-
 use std::collections::HashMap;
 
 pub fn find_saddle_points(input: &[Vec<u64>]) -> Vec<(usize, usize)> {
