@@ -57,7 +57,11 @@ fn say_num_str(digit: &str) -> String {
 
 fn handle_tens(num_str: &str, tens_name: &str) -> String {
     if !num_str.ends_with('0') {
-        format!("{}-{}", tens_name, say_num_str(num_str))
+        format!(
+            "{}-{}",
+            tens_name,
+            say_num_str(num_str.chars().nth(1).unwrap().to_string().as_str())
+        )
     } else {
         tens_name.to_string()
     }
