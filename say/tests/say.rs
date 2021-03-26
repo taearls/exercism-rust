@@ -55,13 +55,11 @@ fn test_one_hundred_twenty_three() {
 }
 
 #[test]
-#[ignore]
 fn test_one_thousand() {
     assert_eq!(say::encode(1000), String::from("one thousand"));
 }
 
 #[test]
-#[ignore]
 fn test_one_thousand_two_hundred_thirty_four() {
     assert_eq!(
         say::encode(1234),

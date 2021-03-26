@@ -4,6 +4,7 @@ pub fn encode(n: u64) -> String {
         1 => handle_ones(&num_str),
         2 => handle_tens(&num_str),
         3 => handle_hundreds(&num_str),
+        4..=6 => handle_thousands(&num_str),
         _ => panic!("invalid num_str: {}", &num_str),
     }
 }
@@ -67,4 +68,15 @@ fn handle_hundreds(num_str: &str) -> String {
         hundreds_str.push_str(&handle_tens(num_str.get(1..3).unwrap()));
     }
     hundreds_str
+}
+
+fn handle_thousands(num_str: &str) -> String {
+    let mut thousands_str: String = handle_ones(num_str.get(0..1).unwrap());
+    thousands_str.push_str(" thousand");
+
+    if num_str.get(1..2).unwrap() != "0" {
+        thousands_str.push_str(" ");
+        thousands_str.push_str(&handle_hundreds(num_str.get(1..4).unwrap()));
+    }
+    thousands_str
 }
