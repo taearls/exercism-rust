@@ -1,55 +1,43 @@
 pub fn encode(n: u64) -> String {
-    let mut result = String::new();
-
-    let mut digit_vec: Vec<String> = Vec::new();
-    let mut temp_str = String::with_capacity(3);
-
-    for digit in n.to_string().chars() {
-        temp_str.push(digit);
-        if temp_str.len() == temp_str.capacity() {
-            digit_vec.push(temp_str.clone());
-            temp_str.clear();
-        }
+    let num_str = n.to_string();
+    match num_str {
+        _ if num_str.len() == 1 => handle_ones(&num_str),
+        _ if num_str.len() == 2 => handle_tens(&num_str),
+        _ => panic!("invalid num_str: {}", &num_str),
     }
-    if !temp_str.is_empty() {
-        digit_vec.push(temp_str.clone());
-        temp_str.clear();
-    }
-    for digit in digit_vec {
-        result.push_str(&say_num_str(&digit))
-    }
-    result
 }
 
-fn say_num_str(digit: &str) -> String {
-    match digit {
-        "0" => "zero".to_string(),
-        "1" => "one".to_string(),
-        "2" => "two".to_string(),
-        "3" => "three".to_string(),
-        "4" => "four".to_string(),
-        "5" => "five".to_string(),
-        "6" => "six".to_string(),
-        "7" => "seven".to_string(),
-        "8" => "eight".to_string(),
-        "9" => "nine".to_string(),
-        "10" => "ten".to_string(),
-        "11" => "eleven".to_string(),
-        "12" => "twelve".to_string(),
-        "13" => "thirteen".to_string(),
-        "14" => "fourteen".to_string(),
-        "15" => "fifteen".to_string(),
-        "16" => "sixteen".to_string(),
-        "17" => "seventeen".to_string(),
-        "18" => "eighteen".to_string(),
-        "19" => "nineteen".to_string(),
-        _ if digit.len() == 2 => handle_tens(digit),
-        _ => panic!("invalid digit: {}", digit),
+fn handle_ones(num_str: &str) -> String {
+    match num_str.get(0..1) {
+        Some("0") => "zero".to_string(),
+        Some("1") => "one".to_string(),
+        Some("2") => "two".to_string(),
+        Some("3") => "three".to_string(),
+        Some("4") => "four".to_string(),
+        Some("5") => "five".to_string(),
+        Some("6") => "six".to_string(),
+        Some("7") => "seven".to_string(),
+        Some("8") => "eight".to_string(),
+        Some("9") => "nine".to_string(),
+        _ => panic!("invalid num_str: {}", num_str),
     }
 }
 
 fn handle_tens(num_str: &str) -> String {
     let tens_name = match num_str.get(0..1) {
+        Some("1") => match num_str.get(1..2) {
+            Some("0") => "ten",
+            Some("1") => "eleven",
+            Some("2") => "twelve",
+            Some("3") => "thirteen",
+            Some("4") => "fourteen",
+            Some("5") => "fifteen",
+            Some("6") => "sixteen",
+            Some("7") => "seventeen",
+            Some("8") => "eighteen",
+            Some("9") => "nineteen",
+            _ => panic!("invalid ones digit in handle_tens"),
+        },
         Some("2") => "twenty",
         Some("3") => "thirty",
         Some("4") => "forty",
@@ -61,12 +49,8 @@ fn handle_tens(num_str: &str) -> String {
         _ => panic!("invalid first char in num_str: {}", num_str),
     };
 
-    if !num_str.ends_with('0') {
-        format!(
-            "{}-{}",
-            tens_name,
-            say_num_str(num_str.chars().nth(1).unwrap().to_string().as_str())
-        )
+    if !num_str.starts_with('1') && !num_str.ends_with('0') {
+        format!("{}-{}", tens_name, handle_ones(num_str.get(1..2).unwrap()))
     } else {
         tens_name.to_string()
     }
