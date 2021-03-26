@@ -43,19 +43,24 @@ fn say_num_str(digit: &str) -> String {
         "17" => "seventeen".to_string(),
         "18" => "eighteen".to_string(),
         "19" => "nineteen".to_string(),
-        _ if digit.len() == 2 && digit.starts_with('2') => handle_tens(digit, "twenty"),
-        _ if digit.len() == 2 && digit.starts_with('3') => handle_tens(digit, "thirty"),
-        _ if digit.len() == 2 && digit.starts_with('4') => handle_tens(digit, "forty"),
-        _ if digit.len() == 2 && digit.starts_with('5') => handle_tens(digit, "fifty"),
-        _ if digit.len() == 2 && digit.starts_with('6') => handle_tens(digit, "sixty"),
-        _ if digit.len() == 2 && digit.starts_with('7') => handle_tens(digit, "seventy"),
-        _ if digit.len() == 2 && digit.starts_with('8') => handle_tens(digit, "eighty"),
-        _ if digit.len() == 2 && digit.starts_with('9') => handle_tens(digit, "ninety"),
+        _ if digit.len() == 2 => handle_tens(digit),
         _ => panic!("invalid digit: {}", digit),
     }
 }
 
-fn handle_tens(num_str: &str, tens_name: &str) -> String {
+fn handle_tens(num_str: &str) -> String {
+    let tens_name = match num_str.get(0..1) {
+        Some("2") => "twenty",
+        Some("3") => "thirty",
+        Some("4") => "forty",
+        Some("5") => "fifty",
+        Some("6") => "sixty",
+        Some("7") => "seventy",
+        Some("8") => "eighty",
+        Some("9") => "ninety",
+        _ => panic!("invalid first char in num_str: {}", num_str),
+    };
+
     if !num_str.ends_with('0') {
         format!(
             "{}-{}",
