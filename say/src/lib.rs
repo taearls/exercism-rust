@@ -5,6 +5,11 @@ pub fn encode(n: u64) -> String {
         2 => handle_tens(&num_str),
         3 => handle_hundreds(&num_str),
         4..=6 => handle_thousands(&num_str),
+        7..=9 => handle_millions(&num_str),
+        10..=12 => handle_billions(&num_str),
+        13..=15 => handle_trillions(&num_str),
+        16..=18 => handle_quadrillions(&num_str),
+        19..=20 => handle_quintillions(&num_str),
         _ => panic!("invalid num_str: {}", &num_str),
     }
 }
@@ -71,12 +76,46 @@ fn handle_hundreds(num_str: &str) -> String {
 }
 
 fn handle_thousands(num_str: &str) -> String {
-    let mut thousands_str: String = handle_ones(num_str.get(0..1).unwrap());
+    let mut thousands_str = String::with_capacity(6);
+
+    // handle leading nums before hundreds digit
+    if num_str.len() == 6 {
+        let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
+        thousands_str.push_str(&leading_hundreds_str);
+    } else if num_str.len() == 5 {
+        let leading_tens_str = handle_tens(&num_str.get(0..2).unwrap());
+        thousands_str.push_str(&leading_tens_str);
+    } else if num_str.len() == 4 {
+        let leading_ones_str = handle_ones(&num_str.get(0..1).unwrap());
+        thousands_str.push_str(&leading_ones_str);
+    }
     thousands_str.push_str(" thousand");
 
-    if num_str.get(1..2).unwrap() != "0" {
+    let hundreds_digit_index = num_str.len() - 3;
+    if num_str.get(hundreds_digit_index..hundreds_digit_index + 1).unwrap() != "0" {
         thousands_str.push_str(" ");
-        thousands_str.push_str(&handle_hundreds(num_str.get(1..4).unwrap()));
+        // TODO: set range below based on num_str.len()
+        thousands_str.push_str(&handle_hundreds(num_str.get(num_str.len() - 3..num_str.len()).unwrap()));
     }
     thousands_str
+}
+
+fn handle_millions(num_str: &str) -> String {
+    String::new()
+}
+
+fn handle_billions(num_str: &str) -> String {
+    String::new()
+}
+
+fn handle_trillions(num_str: &str) -> String {
+    String::new()
+}
+
+fn handle_quadrillions(num_str: &str) -> String {
+    String::new()
+}
+
+fn handle_quintillions(num_str: &str) -> String {
+    String::new()
 }
