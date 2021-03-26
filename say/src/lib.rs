@@ -4,12 +4,12 @@ pub fn encode(n: u64) -> String {
         1 => handle_ones(&num_str),
         2 => handle_tens(&num_str),
         3 => handle_hundreds(&num_str),
-        4..=6 => handle_thousands(&num_str),
-        7..=9 => handle_millions(&num_str),
-        10..=12 => handle_billions(&num_str),
-        13..=15 => handle_trillions(&num_str),
-        16..=18 => handle_quadrillions(&num_str),
-        19..=20 => handle_quintillions(&num_str),
+        capacity @ 4..=6 => handle_scale(&num_str, capacity, "thousand"),
+        capacity @ 7..=9 => handle_scale(&num_str, capacity, "million"),
+        capacity @ 10..=12 => handle_scale(&num_str, capacity, "billion"),
+        capacity @ 13..=15 => handle_scale(&num_str, capacity, "trillion"),
+        capacity @ 16..=18 => handle_scale(&num_str, capacity, "quadrillion"),
+        capacity @ 19..=20 => handle_scale(&num_str, capacity, "quintillion"),
         _ => panic!("invalid num_str: {}", &num_str),
     }
 }
@@ -31,8 +31,16 @@ fn handle_ones(num_str: &str) -> String {
 }
 
 fn handle_tens(num_str: &str) -> String {
+    println!("handle tens num_str: {}", num_str);
+    if num_str.starts_with('0') {
+        if &num_str[1..2] == "0" {
+            return String::new();
+        } else {
+            println!("boom");
+            return handle_ones(&num_str[1..2]);
+        }
+    }
     let tens_name = match num_str.get(0..1) {
-        Some("0") => "",
         Some("1") => match num_str.get(1..2) {
             Some("0") => "ten",
             Some("1") => "eleven",
@@ -65,6 +73,21 @@ fn handle_tens(num_str: &str) -> String {
 }
 
 fn handle_hundreds(num_str: &str) -> String {
+    println!("num_str inside handle_hundreds: {}", num_str);
+
+    // handle leading zeroes
+    if num_str.starts_with('0') {
+        if &num_str[1..2] == "0" {
+            if &num_str[2..3] == "0" {
+                return String::new();
+            } else {
+                return handle_ones(num_str);
+            }
+        } else {
+            return handle_tens(num_str);
+        }
+    }
+
     let mut hundreds_str: String = handle_ones(num_str.get(0..1).unwrap());
     hundreds_str.push_str(" hundred");
 
@@ -75,47 +98,88 @@ fn handle_hundreds(num_str: &str) -> String {
     hundreds_str
 }
 
-fn handle_thousands(num_str: &str) -> String {
-    let mut thousands_str = String::with_capacity(6);
+fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
+    // if num_str.starts_with('0') { return String::new() }
+    let mut scale_str = String::with_capacity(capacity);
 
-    // handle leading nums before hundreds digit
-    if num_str.len() == 6 {
-        let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
-        thousands_str.push_str(&leading_hundreds_str);
-    } else if num_str.len() == 5 {
-        let leading_tens_str = handle_tens(&num_str.get(0..2).unwrap());
-        thousands_str.push_str(&leading_tens_str);
-    } else if num_str.len() == 4 {
-        let leading_ones_str = handle_ones(&num_str.get(0..1).unwrap());
-        thousands_str.push_str(&leading_ones_str);
+    println!("num_str.len() inside handle_scale: {}", num_str.len());
+    println!(
+        "scale_str.capacity() inside handle_scale: {}",
+        scale_str.capacity()
+    );
+    let remainder = capacity.checked_rem(3).unwrap();
+
+    // 9, rem 0 -> 3
+    // 8, rem 1 -> 2
+    // 7, rem 2 -> 1
+    // 6
+    match remainder {
+        0 => {
+            // ex: 100_000
+            let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
+            scale_str.push_str(&leading_hundreds_str);
+        }
+        1 => {
+            // ex: 1_000
+            let leading_ones_str = handle_ones(&num_str.get(0..1).unwrap());
+            scale_str.push_str(&leading_ones_str);
+        }
+        2 => {
+            // ex: 10_000
+            let leading_tens_str = handle_tens(&num_str.get(0..2).unwrap());
+            scale_str.push_str(&leading_tens_str);
+        }
+        _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
     }
-    thousands_str.push_str(" thousand");
 
-    let hundreds_digit_index = num_str.len() - 3;
-    if num_str.get(hundreds_digit_index..hundreds_digit_index + 1).unwrap() != "0" {
-        thousands_str.push_str(" ");
-        // TODO: set range below based on num_str.len()
-        thousands_str.push_str(&handle_hundreds(num_str.get(num_str.len() - 3..num_str.len()).unwrap()));
+    // } else if num_str.len() == scale_str.capacity() - 1 {
+
+    // } else if num_str.len() == scale_str.capacity() - 2 {
+
+    // }
+    scale_str.push_str(" ");
+    scale_str.push_str(scale_name);
+
+    // 9, rem 0 -> 3
+    // 8, rem 1 -> 2
+    // 7, rem 2 -> 1
+    // 6
+
+    // subtract 1 from capacity to make it 0 based
+    let downgraded_scale_digit_index = capacity - 1 - (3 - remainder);
+
+    println!(
+        "downgraded_scale_digit_index: {}",
+        downgraded_scale_digit_index
+    );
+    if num_str
+        .get(downgraded_scale_digit_index..downgraded_scale_digit_index + 1)
+        .unwrap()
+        != "0"
+    {
+        scale_str.push_str(" ");
+
+        let new_capacity = downgraded_scale_digit_index + 1;
+        if new_capacity > 3 {
+            let new_num_str = num_str
+                .get(num_str.len() - new_capacity..num_str.len())
+                .unwrap();
+            let new_scale_name = match scale_name {
+                "quintillion" => "quadrillion",
+                "quadrillion" => "trillion",
+                "trillion" => "billion",
+                "billion" => "million",
+                "million" => "thousand",
+                _ => panic!("invalid scale name in handle_scale: {}", scale_name),
+            };
+            scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
+        } else {
+            scale_str.push_str(&handle_hundreds(
+                num_str
+                    .get(downgraded_scale_digit_index..num_str.len())
+                    .unwrap(),
+            ));
+        }
     }
-    thousands_str
-}
-
-fn handle_millions(num_str: &str) -> String {
-    String::new()
-}
-
-fn handle_billions(num_str: &str) -> String {
-    String::new()
-}
-
-fn handle_trillions(num_str: &str) -> String {
-    String::new()
-}
-
-fn handle_quadrillions(num_str: &str) -> String {
-    String::new()
-}
-
-fn handle_quintillions(num_str: &str) -> String {
-    String::new()
+    scale_str
 }

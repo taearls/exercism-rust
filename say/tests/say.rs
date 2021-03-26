@@ -77,20 +77,17 @@ fn test_eight_hundred_and_ten_thousand() {
 }
 
 #[test]
-#[ignore]
 fn test_one_million() {
     assert_eq!(say::encode(1_000_000), String::from("one million"));
 }
 
 // note, using American style with no and
 #[test]
-#[ignore]
 fn test_one_million_two() {
     assert_eq!(say::encode(1_000_002), String::from("one million two"));
 }
 
 #[test]
-#[ignore]
 fn test_1002345() {
     assert_eq!(
         say::encode(1_002_345),
