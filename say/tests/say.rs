@@ -39,20 +39,17 @@ fn test_twenty_two() {
 }
 
 #[test]
-#[ignore]
 fn test_one_hundred() {
     assert_eq!(say::encode(100), String::from("one hundred"));
 }
 
 // note, using American style with no and
 #[test]
-#[ignore]
 fn test_one_hundred_twenty() {
     assert_eq!(say::encode(120), String::from("one hundred twenty"));
 }
 
 #[test]
-#[ignore]
 fn test_one_hundred_twenty_three() {
     assert_eq!(say::encode(123), String::from("one hundred twenty-three"));
 }

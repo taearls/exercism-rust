@@ -1,8 +1,9 @@
 pub fn encode(n: u64) -> String {
     let num_str = n.to_string();
-    match num_str {
-        _ if num_str.len() == 1 => handle_ones(&num_str),
-        _ if num_str.len() == 2 => handle_tens(&num_str),
+    match num_str.len() {
+        1 => handle_ones(&num_str),
+        2 => handle_tens(&num_str),
+        3 => handle_hundreds(&num_str),
         _ => panic!("invalid num_str: {}", &num_str),
     }
 }
@@ -25,6 +26,7 @@ fn handle_ones(num_str: &str) -> String {
 
 fn handle_tens(num_str: &str) -> String {
     let tens_name = match num_str.get(0..1) {
+        Some("0") => "",
         Some("1") => match num_str.get(1..2) {
             Some("0") => "ten",
             Some("1") => "eleven",
@@ -54,4 +56,15 @@ fn handle_tens(num_str: &str) -> String {
     } else {
         tens_name.to_string()
     }
+}
+
+fn handle_hundreds(num_str: &str) -> String {
+    let mut hundreds_str: String = handle_ones(num_str.get(0..1).unwrap());
+    hundreds_str.push_str(" hundred");
+
+    if num_str.get(1..2).unwrap() != "0" {
+        hundreds_str.push_str(" ");
+        hundreds_str.push_str(&handle_tens(num_str.get(1..3).unwrap()));
+    }
+    hundreds_str
 }
