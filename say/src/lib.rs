@@ -34,7 +34,6 @@ fn handle_ones(num_str: &str) -> String {
 }
 
 fn handle_tens(num_str: &str) -> String {
-    println!("num_str inside handle_tens: {}", num_str);
     if num_str.len() != 2 {
         panic!("invalid str length in handle_tens: {}", num_str)
     }
@@ -45,44 +44,42 @@ fn handle_tens(num_str: &str) -> String {
             return handle_ones(&num_str[1..2]);
         }
     }
-    let tens_name = match num_str.get(0..1) {
-        Some("1") => match num_str.get(1..2) {
-            Some("0") => "ten",
-            Some("1") => "eleven",
-            Some("2") => "twelve",
-            Some("3") => "thirteen",
-            Some("4") => "fourteen",
-            Some("5") => "fifteen",
-            Some("6") => "sixteen",
-            Some("7") => "seventeen",
-            Some("8") => "eighteen",
-            Some("9") => "nineteen",
+    let tens_name = match &num_str[0..1] {
+        "1" => match &num_str[1..2] {
+            "0" => "ten",
+            "1" => "eleven",
+            "2" => "twelve",
+            "3" => "thirteen",
+            "4" => "fourteen",
+            "5" => "fifteen",
+            "6" => "sixteen",
+            "7" => "seventeen",
+            "8" => "eighteen",
+            "9" => "nineteen",
             _ => panic!("invalid ones digit in handle_tens"),
         },
-        Some("2") => "twenty",
-        Some("3") => "thirty",
-        Some("4") => "forty",
-        Some("5") => "fifty",
-        Some("6") => "sixty",
-        Some("7") => "seventy",
-        Some("8") => "eighty",
-        Some("9") => "ninety",
+        "2" => "twenty",
+        "3" => "thirty",
+        "4" => "forty",
+        "5" => "fifty",
+        "6" => "sixty",
+        "7" => "seventy",
+        "8" => "eighty",
+        "9" => "ninety",
         _ => panic!("invalid first char in num_str: {}", num_str),
     };
 
     if !num_str.starts_with('1') && !num_str.ends_with('0') {
-        format!("{}-{}", tens_name, handle_ones(num_str.get(1..2).unwrap()))
+        format!("{}-{}", tens_name, handle_ones(&num_str[1..2]))
     } else {
         tens_name.to_string()
     }
 }
 
 fn handle_hundreds(num_str: &str) -> String {
-    println!("num_str inside handle_hundreds: {}", num_str);
     if num_str.len() != 3 {
         panic!("invalid str length in handle_hundreds: {}", num_str)
     }
-    let mut hundreds_str = String::with_capacity(3);
 
     // handle leading zeroes
     if num_str.starts_with('0') {
@@ -92,14 +89,17 @@ fn handle_hundreds(num_str: &str) -> String {
             } else {
                 return handle_ones(&num_str[2..3]);
             }
+        } else {
+            return handle_tens(&num_str[1..3]);
         }
-    } else {
-        let ones_str: String = handle_ones(num_str.get(0..1).unwrap());
-        hundreds_str.push_str(&ones_str);
-        hundreds_str.push_str(" hundred");
     }
+    let mut hundreds_str = String::with_capacity(3);
 
-    let tens_str = &handle_tens(num_str.get(1..3).unwrap());
+    let ones_str: String = handle_ones(&num_str[0..1]);
+    hundreds_str.push_str(&ones_str);
+    hundreds_str.push_str(" hundred");
+
+    let tens_str = &handle_tens(&num_str[1..3]);
     if !tens_str.is_empty() {
         hundreds_str.push(' ');
     }
@@ -135,7 +135,7 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
             let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
             scale_str.push_str(&leading_hundreds_str);
         }
-        _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
+        _ => unreachable!("leading_digit_count can only be 1, 2, or 3"),
     }
 
     // ex:
@@ -156,7 +156,6 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         new_num_str = &new_num_str[3..];
         new_capacity -= 3;
     }
-
     scale_str.push(' ');
     scale_str.push_str(scale_name);
     scale_str.push(' ');
