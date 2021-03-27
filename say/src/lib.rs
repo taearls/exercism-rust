@@ -41,7 +41,6 @@ fn handle_tens(num_str: &str) -> String {
         if &num_str[1..2] == "0" {
             return String::new();
         } else {
-            println!("boom");
             return handle_ones(&num_str[1..2]);
         }
     }
@@ -100,7 +99,7 @@ fn handle_hundreds(num_str: &str) -> String {
     hundreds_str.push_str(" hundred");
 
     if num_str.get(1..2).unwrap() != "0" {
-        hundreds_str.push_str(" ");
+        hundreds_str.push(' ');
         hundreds_str.push_str(&handle_tens(num_str.get(1..3).unwrap()));
     }
     hundreds_str
@@ -137,7 +136,7 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         }
         _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
     }
-    scale_str.push_str(" ");
+    scale_str.push(' ');
     scale_str.push_str(scale_name);
 
     // ex:
@@ -164,8 +163,8 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     } else {
         let hundreds_str = &handle_hundreds(new_num_str);
         // only add space after 'thousand' if hundreds_str is not empty
-        if hundreds_str != "" {
-            scale_str.push_str(" ");
+        if !hundreds_str.is_empty() {
+            scale_str.push(' ');
         }
         scale_str.push_str(hundreds_str);
     }
