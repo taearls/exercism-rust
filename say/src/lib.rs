@@ -114,17 +114,11 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     // 9, rem 0 -> 3 leading digits
     // 8, rem 1 -> 2 leading digits
     // 7, rem 2 -> 1 leading digit
-    // let leading_digit_count = match remainder {
-    //     0 => 3,
-    //     _ => 3 - remainder,
-    // };
-    match remainder {
-        0 => {
-            // ex: 100_000
-            println!("calling handle_hundreds as leading digit");
-            let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
-            scale_str.push_str(&leading_hundreds_str);
-        }
+    let leading_digit_count = match remainder {
+        0 => 3,
+        _ => remainder,
+    };
+    match leading_digit_count {
         1 => {
             // ex: 1_000
             let leading_ones_str = handle_ones(&num_str.get(0..1).unwrap());
@@ -135,6 +129,12 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
             let leading_tens_str = handle_tens(&num_str.get(0..2).unwrap());
             scale_str.push_str(&leading_tens_str);
         }
+        3 => {
+            // ex: 100_000
+            println!("calling handle_hundreds as leading digit");
+            let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
+            scale_str.push_str(&leading_hundreds_str);
+        }
         _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
     }
     scale_str.push_str(" ");
@@ -144,10 +144,7 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     // 9, rem 0 -> 9 - 3 = 6
     // 8, rem 2 -> 8 - 2 = 6
     // 7, rem 1 -> 7 - 1 = 6
-    let new_capacity = match remainder {
-        0 => capacity - 3,
-        _ => capacity - remainder,
-    };
+    let new_capacity = capacity - leading_digit_count;
 
     println!("new_capacity: {}", new_capacity);
     let new_starting_index = capacity - new_capacity;
