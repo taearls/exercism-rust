@@ -19,17 +19,33 @@ pub fn encode(source: &str) -> String {
 
 pub fn decode(source: &str) -> String {
     let mut decoded_str = String::new();
-    let mut temp_quantity: u8 = 1;
-    for s in source.chars() {
-        if s.is_numeric() {
-            temp_quantity = s as u8;
+    let mut temp_quantity_str = String::new();
+    for c in source.chars() {
+        if c.is_numeric() {
+            temp_quantity_str.push(c);
         } else {
-            println!("temp_quantity: {}", temp_quantity);
+            let temp_quantity: u8 = temp_quantity_str.parse().unwrap_or(1);
             for _ in 0..temp_quantity {
-                decoded_str.push(s);
+                decoded_str.push(c);
             }
-            temp_quantity = 1;
+            temp_quantity_str.clear();
         }
     }
     decoded_str
+}
+
+fn get_quantity_from_char(c: char) -> u8 {
+    match c {
+        '0' => 0,
+        '1' => 1,
+        '2' => 2,
+        '3' => 3,
+        '4' => 4,
+        '5' => 5,
+        '6' => 6,
+        '7' => 7,
+        '8' => 8,
+        '9' => 9,
+        _ => panic!("c is not numeric: {}", c),
+    }
 }
