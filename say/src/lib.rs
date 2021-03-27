@@ -34,6 +34,7 @@ fn handle_ones(num_str: &str) -> String {
 }
 
 fn handle_tens(num_str: &str) -> String {
+    println!("num_str inside handle_tens: {}", num_str);
     if num_str.len() != 2 {
         panic!("invalid str length in handle_tens: {}", num_str)
     }
@@ -77,10 +78,11 @@ fn handle_tens(num_str: &str) -> String {
 }
 
 fn handle_hundreds(num_str: &str) -> String {
+    println!("num_str inside handle_hundreds: {}", num_str);
     if num_str.len() != 3 {
         panic!("invalid str length in handle_hundreds: {}", num_str)
     }
-    println!("num_str inside handle_hundreds: {}", num_str);
+    let mut hundreds_str = String::with_capacity(3);
 
     // handle leading zeroes
     if num_str.starts_with('0') {
@@ -90,18 +92,20 @@ fn handle_hundreds(num_str: &str) -> String {
             } else {
                 return handle_ones(&num_str[2..3]);
             }
-        } else {
-            return handle_tens(&num_str[1..3]);
         }
+    } else {
+        let ones_str: String = handle_ones(num_str.get(0..1).unwrap());
+        hundreds_str.push_str(&ones_str);
+        hundreds_str.push_str(" hundred");
     }
 
-    let mut hundreds_str: String = handle_ones(num_str.get(0..1).unwrap());
-    hundreds_str.push_str(" hundred");
 
-    if num_str.get(1..2).unwrap() != "0" {
+    let tens_str = &handle_tens(num_str.get(1..3).unwrap());
+    if !tens_str.is_empty() {
         hundreds_str.push(' ');
-        hundreds_str.push_str(&handle_tens(num_str.get(1..3).unwrap()));
     }
+
+    hundreds_str.push_str(tens_str);
     hundreds_str
 }
 
@@ -129,14 +133,11 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         }
         3 => {
             // ex: 100_000
-            println!("calling handle_hundreds as leading digit");
             let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
             scale_str.push_str(&leading_hundreds_str);
         }
         _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
     }
-    scale_str.push(' ');
-    scale_str.push_str(scale_name);
 
     // ex:
     // 9, rem 0 -> 9 - 3 = 6
@@ -144,12 +145,8 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     // 7, rem 1 -> 7 - 1 = 6
     let mut new_capacity = capacity - leading_digit_count;
 
-    println!("new_capacity: {}", new_capacity);
     let new_starting_index = capacity - new_capacity;
-    println!("new_starting_index: {}", new_starting_index);
     let mut new_num_str = num_str.get(new_starting_index..num_str.len()).unwrap();
-
-    println!("new_num_str: {}", new_num_str);
 
     // trim out leading digits which are a series of zeroes
     loop {
@@ -160,6 +157,11 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         new_num_str = &new_num_str[3..];
         new_capacity -= 3;
     }
+
+    scale_str.push(' ');
+    scale_str.push_str(scale_name);
+    scale_str.push(' ');
+
     if new_capacity > 3 {
         let new_scale_name = match new_num_str.len() {
             19..=20 => "quintillion",
@@ -173,11 +175,13 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
     } else {
         let hundreds_str = &handle_hundreds(new_num_str);
-        // only add space after 'thousand' if hundreds_str is not empty
-        if !hundreds_str.is_empty() {
-            scale_str.push(' ');
+
+        // remove ending space if nothing after scale_str calls
+        if hundreds_str.is_empty() {
+            scale_str.pop();
+        } else {
+            scale_str.push_str(hundreds_str);
         }
-        scale_str.push_str(hundreds_str);
     }
 
     scale_str
