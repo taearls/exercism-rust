@@ -43,13 +43,11 @@ fn test_encode_lowercase_characters() {
 // decoding tests
 
 #[test]
-#[ignore]
 fn test_decode_empty_string() {
     assert_eq!("", rle::decode(""));
 }
 
 #[test]
-#[ignore]
 fn test_decode_single_characters_only() {
     assert_eq!("XYZ", rle::decode("XYZ"));
 }
