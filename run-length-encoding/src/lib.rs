@@ -1,7 +1,11 @@
 pub fn encode(source: &str) -> String {
-    unimplemented!("Return the run-length encoding of {}.", source);
+    let mut encoded_str = String::with_capacity(source.len());
+
+    encoded_str
 }
 
 pub fn decode(source: &str) -> String {
-    unimplemented!("Return the run-length decoding of {}.", source);
+    let decoded_str = String::new();
+
+    decoded_str
 }
