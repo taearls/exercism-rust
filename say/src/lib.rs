@@ -15,6 +15,9 @@ pub fn encode(n: u64) -> String {
 }
 
 fn handle_ones(num_str: &str) -> String {
+    if num_str.len() != 1 {
+        panic!("invalid str length in handle_ones: {}", num_str)
+    }
     match num_str.get(0..1) {
         Some("0") => "zero".to_string(),
         Some("1") => "one".to_string(),
@@ -31,7 +34,9 @@ fn handle_ones(num_str: &str) -> String {
 }
 
 fn handle_tens(num_str: &str) -> String {
-    println!("handle tens num_str: {}", num_str);
+    if num_str.len() != 2 {
+        panic!("invalid str length in handle_tens: {}", num_str)
+    }
     if num_str.starts_with('0') {
         if &num_str[1..2] == "0" {
             return String::new();
@@ -73,6 +78,9 @@ fn handle_tens(num_str: &str) -> String {
 }
 
 fn handle_hundreds(num_str: &str) -> String {
+    if num_str.len() != 3 {
+        panic!("invalid str length in handle_hundreds: {}", num_str)
+    }
     println!("num_str inside handle_hundreds: {}", num_str);
 
     // handle leading zeroes
@@ -99,23 +107,21 @@ fn handle_hundreds(num_str: &str) -> String {
 }
 
 fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
-    // if num_str.starts_with('0') { return String::new() }
     let mut scale_str = String::with_capacity(capacity);
 
-    println!("num_str.len() inside handle_scale: {}", num_str.len());
-    println!(
-        "scale_str.capacity() inside handle_scale: {}",
-        scale_str.capacity()
-    );
     let remainder = capacity.checked_rem(3).unwrap();
 
-    // 9, rem 0 -> 3
-    // 8, rem 1 -> 2
-    // 7, rem 2 -> 1
-    // 6
+    // 9, rem 0 -> 3 leading digits
+    // 8, rem 1 -> 2 leading digits
+    // 7, rem 2 -> 1 leading digit
+    // let leading_digit_count = match remainder {
+    //     0 => 3,
+    //     _ => 3 - remainder,
+    // };
     match remainder {
         0 => {
             // ex: 100_000
+            println!("calling handle_hundreds as leading digit");
             let leading_hundreds_str = handle_hundreds(&num_str.get(0..3).unwrap());
             scale_str.push_str(&leading_hundreds_str);
         }
@@ -131,55 +137,36 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         }
         _ => unreachable!("remainder of division by 3 can only be 0, 1, or 2"),
     }
-
-    // } else if num_str.len() == scale_str.capacity() - 1 {
-
-    // } else if num_str.len() == scale_str.capacity() - 2 {
-
-    // }
     scale_str.push_str(" ");
     scale_str.push_str(scale_name);
 
-    // 9, rem 0 -> 3
-    // 8, rem 1 -> 2
-    // 7, rem 2 -> 1
-    // 6
+    // ex:
+    // 9, rem 0 -> 9 - 3 = 6
+    // 8, rem 2 -> 8 - 2 = 6
+    // 7, rem 1 -> 7 - 1 = 6
+    let new_capacity = match remainder {
+        0 => capacity - 3,
+        _ => capacity - remainder,
+    };
 
-    // subtract 1 from capacity to make it 0 based
-    let downgraded_scale_digit_index = capacity - 1 - (3 - remainder);
-
-    println!(
-        "downgraded_scale_digit_index: {}",
-        downgraded_scale_digit_index
-    );
-    if num_str
-        .get(downgraded_scale_digit_index..downgraded_scale_digit_index + 1)
-        .unwrap()
-        != "0"
-    {
-        scale_str.push_str(" ");
-
-        let new_capacity = downgraded_scale_digit_index + 1;
-        if new_capacity > 3 {
-            let new_num_str = num_str
-                .get(num_str.len() - new_capacity..num_str.len())
-                .unwrap();
-            let new_scale_name = match scale_name {
-                "quintillion" => "quadrillion",
-                "quadrillion" => "trillion",
-                "trillion" => "billion",
-                "billion" => "million",
-                "million" => "thousand",
-                _ => panic!("invalid scale name in handle_scale: {}", scale_name),
-            };
-            scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
-        } else {
-            scale_str.push_str(&handle_hundreds(
-                num_str
-                    .get(downgraded_scale_digit_index..num_str.len())
-                    .unwrap(),
-            ));
-        }
+    println!("new_capacity: {}", new_capacity);
+    let new_starting_index = capacity - new_capacity;
+    println!("new_starting_index: {}", new_starting_index);
+    let new_num_str = num_str.get(new_starting_index..num_str.len()).unwrap();
+    println!("new_num_str: {}", new_num_str);
+    if new_capacity > 3 {
+        let new_scale_name = match scale_name {
+            "quintillion" => "quadrillion",
+            "quadrillion" => "trillion",
+            "trillion" => "billion",
+            "billion" => "million",
+            "million" => "thousand",
+            _ => panic!("invalid scale name in handle_scale: {}", scale_name),
+        };
+        scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
+    } else {
+        scale_str.push_str(&handle_hundreds(new_num_str));
     }
+
     scale_str
 }
