@@ -6,7 +6,7 @@ pub fn encode(source: &str) -> String {
         if temp_letter.starts_with(c) {
             temp_quantity += 1;
         } else if temp_letter.is_empty() {
-            temp_letter.push(c); 
+            temp_letter.push(c);
         } else {
             if temp_quantity > 1 {
                 encoded_str.push_str(&temp_quantity.to_string());
