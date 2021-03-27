@@ -88,10 +88,10 @@ fn handle_hundreds(num_str: &str) -> String {
             if &num_str[2..3] == "0" {
                 return String::new();
             } else {
-                return handle_ones(num_str);
+                return handle_ones(&num_str[2..3]);
             }
         } else {
-            return handle_tens(num_str);
+            return handle_tens(&num_str[1..3]);
         }
     }
 
@@ -107,7 +107,6 @@ fn handle_hundreds(num_str: &str) -> String {
 
 fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     let mut scale_str = String::with_capacity(capacity);
-
     let remainder = capacity.checked_rem(3).unwrap();
 
     // 9, rem 0 -> 3 leading digits
@@ -143,21 +142,33 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
     // 9, rem 0 -> 9 - 3 = 6
     // 8, rem 2 -> 8 - 2 = 6
     // 7, rem 1 -> 7 - 1 = 6
-    let new_capacity = capacity - leading_digit_count;
+    let mut new_capacity = capacity - leading_digit_count;
 
     println!("new_capacity: {}", new_capacity);
     let new_starting_index = capacity - new_capacity;
     println!("new_starting_index: {}", new_starting_index);
-    let new_num_str = num_str.get(new_starting_index..num_str.len()).unwrap();
+    let mut new_num_str = num_str.get(new_starting_index..num_str.len()).unwrap();
+
     println!("new_num_str: {}", new_num_str);
+
+    // trim out leading digits which are a series of zeroes
+    loop {
+        let leading_digits = new_num_str.get(0..3).unwrap();
+        if leading_digits != "000" || new_num_str.len() == 3 {
+            break;
+        }
+        new_num_str = &new_num_str[3..];
+        new_capacity -= 3;
+    }
     if new_capacity > 3 {
-        let new_scale_name = match scale_name {
-            "quintillion" => "quadrillion",
-            "quadrillion" => "trillion",
-            "trillion" => "billion",
-            "billion" => "million",
-            "million" => "thousand",
-            _ => panic!("invalid scale name in handle_scale: {}", scale_name),
+        let new_scale_name = match new_num_str.len() {
+            19..=20 => "quintillion",
+            16..=18 => "quadrillion",
+            13..=15 => "trillion",
+            10..=12 => "billion",
+            7..=9 => "million",
+            4..=6 => "thousand",
+            _ => panic!("invalid length in handle_scale: {}", new_num_str),
         };
         scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
     } else {
