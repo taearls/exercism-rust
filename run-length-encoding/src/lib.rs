@@ -1,18 +1,28 @@
 pub fn encode(source: &str) -> String {
     let mut encoded_str = String::with_capacity(source.len());
-    // let mut temp_quantity: u8 = 1;
-    // let mut temp_letter: char;
-    
-    // for s in source.chars() {
-    //     if s.is_numeric() {
-    //         temp_quantity = s as u8;
-    //     } else if s.is_alphabetic() {
-    //         for _ in 0..temp_quantity {
-    //             encoded_str.push(s);
-    //         }
-    //         temp_quantity = 1;
-    //     }
-    // }
+    let mut temp_quantity: u8 = 1;
+    let mut temp_letter = String::with_capacity(1);
+    for c in source.chars() {
+        if temp_letter.starts_with(c) {
+            temp_quantity += 1;
+        } else if temp_letter.is_empty() {
+            temp_letter.push(c); 
+        } else {
+            if temp_quantity > 1 {
+                encoded_str.push_str(&temp_quantity.to_string());
+            }
+            encoded_str.push_str(&temp_letter);
+
+            temp_letter.clear();
+            temp_letter.push(c);
+            temp_quantity = 1;
+        }
+    }
+    // have to process chars + 1 for account for allocation of first char
+    if temp_quantity > 1 {
+        encoded_str.push_str(&temp_quantity.to_string());
+    }
+    encoded_str.push_str(&temp_letter);
 
     encoded_str
 }
@@ -32,20 +42,4 @@ pub fn decode(source: &str) -> String {
         }
     }
     decoded_str
-}
-
-fn get_quantity_from_char(c: char) -> u8 {
-    match c {
-        '0' => 0,
-        '1' => 1,
-        '2' => 2,
-        '3' => 3,
-        '4' => 4,
-        '5' => 5,
-        '6' => 6,
-        '7' => 7,
-        '8' => 8,
-        '9' => 9,
-        _ => panic!("c is not numeric: {}", c),
-    }
 }
