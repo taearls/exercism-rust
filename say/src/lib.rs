@@ -162,7 +162,12 @@ fn handle_scale(num_str: &str, capacity: usize, scale_name: &str) -> String {
         };
         scale_str.push_str(&handle_scale(new_num_str, new_capacity, new_scale_name));
     } else {
-        scale_str.push_str(&handle_hundreds(new_num_str));
+        let hundreds_str = &handle_hundreds(new_num_str);
+        // only add space after 'thousand' if hundreds_str is not empty
+        if hundreds_str != "" {
+            scale_str.push_str(" ");
+        }
+        scale_str.push_str(hundreds_str);
     }
 
     scale_str
