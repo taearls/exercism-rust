@@ -13,12 +13,13 @@ pub fn encode(source: &str) -> String {
             }
             encoded_str.push_str(&temp_letter);
 
+            // reset temp vars
             temp_letter.clear();
             temp_letter.push(c);
             temp_quantity = 1;
         }
     }
-    // have to process chars + 1 for account for allocation of first char
+    // have to process for length of chars + 1 to account for initial allocation of first char
     if temp_quantity > 1 {
         encoded_str.push_str(&temp_quantity.to_string());
     }
