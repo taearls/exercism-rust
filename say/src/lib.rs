@@ -99,7 +99,6 @@ fn handle_hundreds(num_str: &str) -> String {
         hundreds_str.push_str(" hundred");
     }
 
-
     let tens_str = &handle_tens(num_str.get(1..3).unwrap());
     if !tens_str.is_empty() {
         hundreds_str.push(' ');
