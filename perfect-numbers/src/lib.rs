@@ -9,7 +9,7 @@ pub enum Classification {
 
 pub fn classify(num: u64) -> Option<Classification> {
     match num {
-        0 => None, 
+        0 => None,
         _ => {
             let aliquot_sum = calc_aliquot_sum(num);
 
@@ -19,13 +19,13 @@ pub fn classify(num: u64) -> Option<Classification> {
                 Ordering::Greater => Classification::Abundant,
             };
             Some(classification)
-        },
+        }
     }
 }
 
 fn calc_aliquot_sum(num: u64) -> u64 {
     let mut aliquot_sum = 0;
-    
+
     for i in 1..=(num / 2) {
         if num % i == 0 {
             aliquot_sum += i;
