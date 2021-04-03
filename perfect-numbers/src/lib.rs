@@ -26,7 +26,7 @@ pub fn classify(num: u64) -> Option<Classification> {
 fn calc_aliquot_sum(num: u64) -> u64 {
     let mut aliquot_sum = 0;
     for i in 1..num {
-        if num % i == 1 {
+        if num % i == 0 {
             aliquot_sum += i;
         }
     }
