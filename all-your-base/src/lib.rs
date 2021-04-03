@@ -42,10 +42,11 @@ pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>,
     } else if to_base == 0 {
         Err(Error::InvalidOutputBase)
     } else {
+        // let mut num_from_digits = calc_num_from_digits(number, from_base);
         let mut result_vec: Vec<u32> = Vec::new();
         for i in 0..=number.len() - 1 {
             let num = number[i];
-            if num > from_base {
+            if num >= from_base {
                 return Err(Error::InvalidDigit(num));
             } else {
                 let exp = (number.len() - 1 - i) as u32;
@@ -55,3 +56,21 @@ pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>,
         Ok(result_vec)
     }
 }
+
+// fn calc_num_from_digits(number: &[u32], from_base: u32) -> u32 {
+//     let mut num = 0;
+
+//     for digit in number.iter() {
+//         num = from_base * num + digit;
+//     }
+//     num
+// }
+
+// fn calc_digits_from_num(mut number: u32, to_base: u32) -> Vec<u32> {
+//     let mut digits: Vec<u32> = Vec::new();
+//     while number > 0 {
+//         digits.push()
+//     }
+
+//     digits
+// }
