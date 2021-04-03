@@ -6,19 +6,16 @@ fn test_valid() {
 }
 
 #[test]
-#[ignore]
 fn test_invalid_check_digit() {
     assert!(!is_valid_isbn("3-598-21508-9"));
 }
 
 #[test]
-#[ignore]
 fn test_valid_check_digit_of_10() {
     assert!(is_valid_isbn("3-598-21507-X"));
 }
 
 #[test]
-#[ignore]
 fn test_invalid_character_as_check_digit() {
     assert!(!is_valid_isbn("3-598-21507-A"));
 }
