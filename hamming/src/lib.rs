@@ -3,18 +3,15 @@
 pub fn hamming_distance(s1: &str, s2: &str) -> Option<usize> {
     if s1.len() != s2.len() {
         None
+    } else if s1.is_empty() {
+        Some(0)
     } else {
-        match s1.len() {
-            0 => Some(0),
-            _ => {
-                let mut distance: usize = 0;
-                for (i, c) in s1.char_indices() {
-                    if c != s2.chars().nth(i).unwrap() {
-                        distance += 1;
-                    }
-                }
-                Some(distance)
+        let mut distance: usize = 0;
+        for (i, c) in s1.char_indices() {
+            if c != s2.chars().nth(i).unwrap() {
+                distance += 1;
             }
         }
+        Some(distance)
     }
 }
