@@ -25,9 +25,9 @@ fn basic() {
 
 tests! {
     test_classification {
-        #[ignore] test_1(1, Classification::Deficient);
-        #[ignore] test_2(2, Classification::Deficient);
-        #[ignore] test_4(4, Classification::Deficient);
+        test_1(1, Classification::Deficient);
+        test_2(2, Classification::Deficient);
+        test_4(4, Classification::Deficient);
         #[ignore] test_6(6, Classification::Perfect);
         #[ignore] test_12(12, Classification::Abundant);
         #[ignore] test_28(28, Classification::Perfect);
