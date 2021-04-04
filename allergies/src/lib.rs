@@ -29,24 +29,31 @@ impl Allergies {
         let mut score = self.score;
         let mut allergens: Vec<Allergen> = Vec::new(); 
 
-        let mut exp: u32 = 0;
-        while score > 0 && exp < 8 {
-            if score % (2u32.pow(exp)) == 0 {
-                let allergen = match exp {
-                    0 => Allergen::Eggs,
-                    1 => Allergen::Peanuts,
-                    2 => Allergen::Shellfish,
-                    3 => Allergen::Strawberries,
-                    4 => Allergen::Tomatoes,
-                    5 => Allergen::Chocolate,
-                    6 => Allergen::Pollen,
-                    7 => Allergen::Cats,
-                    _ => unreachable!()
+        let mut exp: u32 = 7;
+        println!("score: {}", score);
+        while score > 0 {
+            let score_to_check = 2u32.pow(exp);
+            if score >= score_to_check {
+                let allergen = match score_to_check {
+                    1 => Allergen::Eggs,
+                    2 => Allergen::Peanuts,
+                    4 => Allergen::Shellfish,
+                    8 => Allergen::Strawberries,
+                    16 => Allergen::Tomatoes,
+                    32 => Allergen::Chocolate,
+                    64 => Allergen::Pollen,
+                    128 => Allergen::Cats,
+                    _ => unreachable!("there are only 8 possible allergens"),
                 };
                 allergens.push(allergen);
-                score -= 2u32.pow(exp);
+                score -= score_to_check;
+                println!("score after removing {}: {}", score_to_check, score);
+                println!("allergens: {:?}", allergens);
             }
-            exp += 1;
+            if exp == 0 {
+                break;
+            }
+            exp -= 1;
         }
 
         allergens
