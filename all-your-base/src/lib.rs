@@ -37,40 +37,42 @@ pub enum Error {
 ///    However, your function must be able to process input with leading 0 digits.
 ///
 pub fn convert(number: &[u32], from_base: u32, to_base: u32) -> Result<Vec<u32>, Error> {
-    if from_base == 0 {
+    if from_base <= 1 {
         Err(Error::InvalidInputBase)
-    } else if to_base == 0 {
+    } else if to_base <= 1 {
         Err(Error::InvalidOutputBase)
     } else {
-        // let mut num_from_digits = calc_num_from_digits(number, from_base);
-        let mut result_vec: Vec<u32> = Vec::new();
-        for i in 0..=number.len() - 1 {
-            let num = number[i];
-            if num >= from_base {
-                return Err(Error::InvalidDigit(num));
-            } else {
-                let exp = (number.len() - 1 - i) as u32;
-                result_vec.push(num * to_base.pow(exp))
-            }
-        }
-        Ok(result_vec)
+        let base_ten_value: u32 = calc_base_ten_value(number, from_base)?;
+        Ok(calc_digits_from_base_ten(base_ten_value, to_base))
     }
 }
 
-// fn calc_num_from_digits(number: &[u32], from_base: u32) -> u32 {
-//     let mut num = 0;
+fn calc_base_ten_value(number: &[u32], from_base: u32) -> Result<u32, Error> {
+    let mut num = 0;
 
-//     for digit in number.iter() {
-//         num = from_base * num + digit;
-//     }
-//     num
-// }
+    for (index, digit) in number.iter().enumerate() {
+        let exp = (number.len() - 1 - index) as u32;
+        if digit >= &from_base {
+            return Err(Error::InvalidDigit(*digit));
+        }
+        num += digit * (from_base.pow(exp));
+    }
+    Ok(num)
+}
 
-// fn calc_digits_from_num(mut number: u32, to_base: u32) -> Vec<u32> {
-//     let mut digits: Vec<u32> = Vec::new();
-//     while number > 0 {
-//         digits.push()
-//     }
-
-//     digits
-// }
+fn calc_digits_from_base_ten(mut base_ten_value: u32, to_base: u32) -> Vec<u32> {
+    if base_ten_value == 0 {
+        return vec![0]
+    }
+    
+    let mut digits: Vec<u32> = Vec::new();
+    
+    while base_ten_value > 0 {
+        let digit = base_ten_value % to_base;
+        digits.push(digit);
+        base_ten_value = (base_ten_value - digit) / to_base;
+    }
+    // we're pushing ones digit in first, but we need it the opposite way
+    digits.reverse();
+    digits
+}
