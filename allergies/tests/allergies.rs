@@ -27,7 +27,6 @@ fn is_not_allergic_to_anything() {
 }
 
 #[test]
-#[ignore]
 fn is_allergic_to_eggs() {
     assert!(Allergies::new(1).is_allergic_to(&Allergen::Eggs));
 }
