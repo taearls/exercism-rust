@@ -62,11 +62,11 @@ fn calc_base_ten_value(number: &[u32], from_base: u32) -> Result<u32, Error> {
 
 fn calc_digits_from_base_ten(mut base_ten_value: u32, to_base: u32) -> Vec<u32> {
     if base_ten_value == 0 {
-        return vec![0]
+        return vec![0];
     }
-    
+
     let mut digits: Vec<u32> = Vec::new();
-    
+
     while base_ten_value > 0 {
         let digit = base_ten_value % to_base;
         digits.push(digit);
