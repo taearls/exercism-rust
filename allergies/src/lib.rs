@@ -17,7 +17,8 @@ pub enum Allergen {
 impl Allergies {
     pub fn new(score: u32) -> Self {
         Allergies {
-            score,
+            // mod 256 to ignore any false positives above the max score of 255
+            score: score % 256,
         }
     }
 
@@ -27,10 +28,9 @@ impl Allergies {
 
     pub fn allergies(&self) -> Vec<Allergen> {
         let mut score = self.score;
-        let mut allergens: Vec<Allergen> = Vec::new(); 
+        let mut allergens: Vec<Allergen> = Vec::new();
 
         let mut exp: u32 = 7;
-        println!("score: {}", score);
         while score > 0 {
             let score_to_check = 2u32.pow(exp);
             if score >= score_to_check {
@@ -47,8 +47,6 @@ impl Allergies {
                 };
                 allergens.push(allergen);
                 score -= score_to_check;
-                println!("score after removing {}: {}", score_to_check, score);
-                println!("allergens: {:?}", allergens);
             }
             if exp == 0 {
                 break;

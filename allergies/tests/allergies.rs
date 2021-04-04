@@ -119,7 +119,6 @@ fn allergic_to_everything() {
 }
 
 #[test]
-#[ignore]
 fn scores_over_255_do_not_trigger_false_positives() {
     let expected = &[
         Allergen::Eggs,
