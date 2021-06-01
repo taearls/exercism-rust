@@ -5,18 +5,13 @@ pub enum AffineCipherError {
 
 pub fn encode(plaintext: &str, a: i32, b: i32) -> Result<String, AffineCipherError> {
     let mut str = String::with_capacity(plaintext.len());
-    let len = match str.len() {
-        0 => 1,
-        len => len - 1,
-    };
     let mut char_count: usize = 0;
-    for (i, c) in plaintext.char_indices() {
+
+    for c in plaintext.chars() {
         if !c.is_ascii_alphanumeric() { continue; }
         
         // every 5 chars prepend a space to result str before adding new_char
-        if i > 0 && char_count % 5 == 0 {
-            println!("i: {}", i);
-            println!("c: {}", c);
+        if char_count > 0 && char_count % 5 == 0 {
             str.push(' ');
         }
         if c.is_alphabetic() {
