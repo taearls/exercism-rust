@@ -3,6 +3,10 @@ pub enum AffineCipherError {
     NotCoprime(i32),
 }
 
+// E(x) = (ax + b) mod m
+// where x is the letter's index from 0 - length of alphabet - 1
+// m is the length of the alphabet. For the roman alphabet m == 26.
+// and a and b make the key
 pub fn encode(plaintext: &str, a: i32, b: i32) -> Result<String, AffineCipherError> {
     if !is_coprime(a) {
         Err(AffineCipherError::NotCoprime(a))
@@ -30,6 +34,10 @@ pub fn encode(plaintext: &str, a: i32, b: i32) -> Result<String, AffineCipherErr
     }
 }
 
+// D(y) = a^-1(y - b) mod m
+// where y is the numeric value of an encrypted letter, ie. y = E(x)
+// it is important to note that a^-1 is the modular multiplicative inverse of a mod m
+// the modular multiplicative inverse of a only exists if a and m are coprime.
 pub fn decode(ciphertext: &str, a: i32, b: i32) -> Result<String, AffineCipherError> {
     let mut str = String::with_capacity(ciphertext.len());
     let mmi = find_mmi(a)?;
@@ -60,6 +68,7 @@ fn is_coprime(a: i32) -> bool {
     a % 2 != 0 && a % 13 != 0
 }
 
+// 1 = (a * x) mod m, where x is modular multiplicative inverse
 fn find_mmi(a: i32) -> Result<i32, AffineCipherError> {
     for i in 2..=25 {
         if (a * i) % 26 == 1 {
