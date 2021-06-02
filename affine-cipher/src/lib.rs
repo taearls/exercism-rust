@@ -1,5 +1,3 @@
-use std::cmp::Ordering;
-
 #[derive(Debug, Eq, PartialEq)]
 pub enum AffineCipherError {
     NotCoprime(i32),
@@ -33,7 +31,23 @@ pub fn encode(plaintext: &str, a: i32, b: i32) -> Result<String, AffineCipherErr
 }
 
 pub fn decode(ciphertext: &str, a: i32, b: i32) -> Result<String, AffineCipherError> {
-    unimplemented!("Decode {} with the key ({}, {})", ciphertext, a, b);
+    let mut str = String::with_capacity(ciphertext.len());
+    let mmi = find_mmi(a)?;
+    
+    for c in ciphertext.chars() {
+        if !c.is_alphanumeric() { continue; }
+        if c.is_numeric() {
+            str.push(c);
+        } else if c.is_alphabetic() {
+            let mut new_char_val = (mmi * (letter_index(c) - b)) % 26;
+            // adding 26 here handles case where result of new_char_val is negative
+            new_char_val = (new_char_val + 26) % 26;
+
+            let new_char = ((new_char_val as u8) + 97) as char;
+            str.push(new_char as char);
+        }
+    }
+    Ok(str)
 }
 
 fn letter_index(c: char) -> i32 {
@@ -44,4 +58,13 @@ fn letter_index(c: char) -> i32 {
 fn is_coprime(a: i32) -> bool {
     // a must be coprime with m (in this case, 26)
     a % 2 != 0 && a % 13 != 0
+}
+
+fn find_mmi(a: i32) -> Result<i32, AffineCipherError> {
+    for i in 2..=25 {
+        if (a * i) % 26 == 1 {
+            return Ok(i)
+        }
+    }
+    Err(AffineCipherError::NotCoprime(a))
 }

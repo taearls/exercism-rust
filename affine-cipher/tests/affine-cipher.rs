@@ -66,13 +66,11 @@ fn encode_with_a_not_coprime_to_m() {
 }
 
 #[test]
-#[ignore]
 fn decode_exercism() {
     assert_eq!(decode("tytgn fjr", 3, 7).unwrap(), "exercism")
 }
 
 #[test]
-#[ignore]
 fn decode_a_sentence() {
     assert_eq!(
         encode("anobstacleisoftenasteppingstone", 19, 16).unwrap(),
@@ -85,7 +83,6 @@ fn decode_a_sentence() {
 }
 
 #[test]
-#[ignore]
 fn decode_numbers() {
     assert_eq!(
         decode("odpoz ub123 odpoz ub", 25, 7).unwrap(),
@@ -94,7 +91,6 @@ fn decode_numbers() {
 }
 
 #[test]
-#[ignore]
 fn decode_all_the_letters() {
     assert_eq!(
         decode("swxtj npvyk lruol iejdc blaxk swxmh qzglf", 17, 33).unwrap(),
@@ -103,7 +99,6 @@ fn decode_all_the_letters() {
 }
 
 #[test]
-#[ignore]
 fn decode_with_no_spaces_in_input() {
     assert_eq!(
         decode("swxtjnpvyklruoliejdcblaxkswxmhqzglf", 17, 33).unwrap(),
@@ -112,7 +107,6 @@ fn decode_with_no_spaces_in_input() {
 }
 
 #[test]
-#[ignore]
 fn decode_with_too_many_spaces() {
     assert_eq!(
         decode("vszzm    cly   yd cg    qdp", 15, 16).unwrap(),
@@ -121,7 +115,6 @@ fn decode_with_too_many_spaces() {
 }
 
 #[test]
-#[ignore]
 fn decode_with_a_not_coprime_to_m() {
     const EXPECTED_ERROR: AffineCipherError = AffineCipherError::NotCoprime(13);
     match decode("Test", 13, 11) {
