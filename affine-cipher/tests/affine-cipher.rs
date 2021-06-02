@@ -50,7 +50,6 @@ fn encode_all_the_letters() {
 }
 
 #[test]
-#[ignore]
 fn encode_with_a_not_coprime_to_m() {
     const EXPECTED_ERROR: AffineCipherError = AffineCipherError::NotCoprime(6);
     match encode("This is a test.", 6, 17) {
