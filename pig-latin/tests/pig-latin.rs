@@ -26,7 +26,6 @@ fn test_word_beginning_with_u() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_a_vowel_and_followed_by_a_qu() {
     assert_eq!(pl::translate("equal"), "equalay");
 }
