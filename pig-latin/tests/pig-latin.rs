@@ -56,37 +56,31 @@ fn test_word_beginning_with_q_without_a_following_u() {
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_ch() {
     assert_eq!(pl::translate("chair"), "airchay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_qu() {
     assert_eq!(pl::translate("queen"), "eenquay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_qu_and_a_preceding_consonant() {
     assert_eq!(pl::translate("square"), "aresquay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_th() {
     assert_eq!(pl::translate("therapy"), "erapythay");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_thr() {
     assert_eq!(pl::translate("thrush"), "ushthray");
 }
 
 #[test]
-#[ignore]
 fn test_word_beginning_with_sch() {
     assert_eq!(pl::translate("school"), "oolschay");
 }
@@ -104,7 +98,6 @@ fn test_word_beginning_with_xr() {
 }
 
 #[test]
-#[ignore]
 fn test_y_is_treated_like_a_vowel_at_the_end_of_a_consonant_cluster() {
     assert_eq!(pl::translate("rhythm"), "ythmrhay");
 }
