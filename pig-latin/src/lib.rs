@@ -2,10 +2,7 @@ use lazy_static::lazy_static;
 use regex::Regex;
 
 pub fn translate(input: &str) -> String {
-    let mut result: Vec<String> = Vec::new();
-    let words: Vec<&str> = input.split(' ').collect();
-
-    for word in words.iter() {
+    input.split_whitespace().into_iter().map(|word| {
         let mut temp_str = word.to_string();
         match word.chars().next() {
             Some(c) if matches_vowels(&c.to_string()) => temp_str.push_str("ay"),
@@ -21,9 +18,8 @@ pub fn translate(input: &str) -> String {
             },
             None => (),
         }
-        result.push(temp_str);
-    }
-    result.join(" ")
+        temp_str
+    }).collect::<Vec<_>>().join(" ")
 }
 
 fn matches_consonant(input: &str) -> Option<regex::Captures<'_>> {
