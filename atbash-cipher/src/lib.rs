@@ -4,13 +4,28 @@ const ALPHABET: [char; 26] = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 
 pub fn encode(plain: &str) -> String {
     plain
     .chars()
-    .filter(|c| c.is_alphabetic())
+    .filter(|c| c.is_alphanumeric())
     .map(|c| {
-        let index = ALPHABET.iter().position(|p| &c.to_lowercase().next().unwrap() == p).unwrap();
-        let reversed_index = ALPHABET.len() - 1 - index;
-        ALPHABET[reversed_index]
+        if c.is_alphabetic() {
+            let index = ALPHABET
+                .iter()
+                .position(|p| &c.to_lowercase().next().unwrap() == p)
+                .unwrap();
+            let reversed_index = ALPHABET.len() - 1 - index;
+            ALPHABET[reversed_index]
+        } else {
+            c
+        }
     })
-    .collect()
+    .enumerate()
+    .fold(String::new(), |acc, (i, c)| {
+        // every 5 chars add a space
+        if i != 0 && i % 5 == 0 {
+            format!("{} {}", acc, c)
+        } else {
+            format!("{}{}", acc, c)
+        }
+    })
 }
 
 /// "Decipher" with the Atbash cipher.

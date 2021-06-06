@@ -21,13 +21,11 @@ fn test_encode_spaces() {
 }
 
 #[test]
-#[ignore]
 fn test_encode_mindblowingly() {
     assert_eq!(cipher::encode("mindblowingly"), "nrmwy oldrm tob");
 }
 
 #[test]
-#[ignore]
 fn test_encode_numbers() {
     assert_eq!(
         cipher::encode("Testing,1 2 3, testing."),
@@ -36,13 +34,11 @@ fn test_encode_numbers() {
 }
 
 #[test]
-#[ignore]
 fn test_encode_deep_thought() {
     assert_eq!(cipher::encode("Truth is fiction."), "gifgs rhurx grlm");
 }
 
 #[test]
-#[ignore]
 fn test_encode_all_the_letters() {
     assert_eq!(
         cipher::encode("The quick brown fox jumps over the lazy dog."),
