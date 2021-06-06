@@ -3,15 +3,19 @@ use regex::Regex;
 
 pub fn translate(input: &str) -> String {
     let mut result = String::from(input);
-    if let Some(c) = input.chars().next() {
-        if let Some(found) = matches_consonant(input) {
-            result.replace_range(..found[0].len(), "");
-            result.push_str(&found[0]);
-        } else if !matches_vowels(&c.to_string()) && !chars_to_be_ignored(&input[0..2]) {
-            result.remove(0);
-            result.push(c);
-        }
-        result.push_str("ay");
+    match input.chars().next() {
+        Some(c) if matches_vowels(&c.to_string()) => result.push_str("ay"),
+        Some(c) => {
+            if let Some(found) = matches_consonant(input) {
+                result.replace_range(..found[0].len(), "");
+                result.push_str(&found[0]);
+            } else if !chars_to_be_ignored(&input[0..2]) {
+                result.remove(0);
+                result.push(c);
+            } 
+            result.push_str("ay");
+        },
+        None => (),
     }
     result
 }
