@@ -1,6 +1,5 @@
 pub fn encrypt(input: &str) -> String {
-    let chunk_length = (input.len() as f32).sqrt().floor() as usize;
-    
+    let chunk_length = get_chunk_length(input);
     input
         .chars()
         .filter(|c| c.is_alphanumeric())
@@ -13,4 +12,8 @@ pub fn encrypt(input: &str) -> String {
                 format!("{}{}", acc, c)
             }
         })
+}
+fn get_chunk_length(input: &str) -> usize {
+    let trimmed_input: String = input.split_whitespace().collect();
+    (trimmed_input.len() as f32).sqrt().ceil() as usize
 }
