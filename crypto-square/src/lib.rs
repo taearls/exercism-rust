@@ -13,7 +13,7 @@ pub fn encrypt(input: &str) -> String {
         .collect::<Vec<_>>();
 
     // create padded string so we account for extra spaces
-    let padded_str = format!("{:width$}", filtered_str, width = rows * cols);
+    let padded_str = format!("{:length$}", filtered_str, length = rows * cols);
 
     for (i, c) in padded_str.chars().enumerate() {
         str_vec[i % cols].push(c);
