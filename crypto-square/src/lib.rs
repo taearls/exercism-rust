@@ -11,7 +11,7 @@ pub fn encrypt(input: &str) -> String {
     let mut str_vec = (0..cols)
         .map(|_| String::with_capacity(cols))
         .collect::<Vec<_>>();
-        
+
     // create padded string so we account for extra spaces
     let padded_str = format!("{:width$}", filtered_str, width = rows * cols);
 
