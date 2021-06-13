@@ -6,7 +6,15 @@ pub enum Error {
 
 /// Convert a list of numbers to a stream of bytes encoded with variable length encoding.
 pub fn to_bytes(values: &[u32]) -> Vec<u8> {
-    unimplemented!("Convert the values {:?} to a list of bytes", values)
+    let mut result: Vec<u8> = Vec::new();
+    for value in values.iter() {
+        if value < &128 {
+            result.push(*value as u8);
+        } else {
+            // TODO: compress vals greater than 128
+        }
+    }
+    result
 }
 
 /// Given a stream of bytes, extract all numbers which are encoded in there.
