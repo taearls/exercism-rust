@@ -8,13 +8,16 @@ pub enum Error {
 pub fn to_bytes(values: &[u32]) -> Vec<u8> {
     let mut result: Vec<u8> = Vec::new();
     for value in values.iter() {
-        if value < &128 {
-            result.push(*value as u8);
-        } else {
-            // TODO: compress vals greater than 128
+        let mut temp = *value; 
+        result.push((temp as u8) & 0x7F);
+        temp >>= 7;
+
+        while temp > 0 {
+            result.push((temp as u8) | 0x80);
+            temp >>= 7;
         }
     }
-    result
+    result.iter().rev().map(|x| *x).collect::<Vec<u8>>()
 }
 
 /// Given a stream of bytes, extract all numbers which are encoded in there.
