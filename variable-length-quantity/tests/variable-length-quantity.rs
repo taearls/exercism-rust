@@ -70,7 +70,6 @@ fn from_bytes() {
 }
 
 #[test]
-#[ignore]
 fn to_bytes_multiple_values() {
     assert_eq!(&[0x40, 0x7f], vlq::to_bytes(&[0x40, 0x7f]).as_slice());
     assert_eq!(

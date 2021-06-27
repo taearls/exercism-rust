@@ -7,7 +7,7 @@ pub enum Error {
 /// Convert a list of numbers to a stream of bytes encoded with variable length encoding.
 pub fn to_bytes(values: &[u32]) -> Vec<u8> {
     let mut result: Vec<u8> = Vec::new();
-    for value in values.iter() {
+    for value in values.iter().rev() {
         let mut temp = *value; 
         result.push((temp as u8) & 0x7F);
         temp >>= 7;
@@ -17,7 +17,8 @@ pub fn to_bytes(values: &[u32]) -> Vec<u8> {
             temp >>= 7;
         }
     }
-    result.iter().rev().map(|x| *x).collect::<Vec<u8>>()
+    result.reverse();
+    result
 }
 
 /// Given a stream of bytes, extract all numbers which are encoded in there.
