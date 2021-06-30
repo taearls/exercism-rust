@@ -54,7 +54,6 @@ fn to_quintuple_byte() {
 }
 
 #[test]
-#[ignore]
 fn from_bytes() {
     assert_eq!(Ok(vec![0x7f]), vlq::from_bytes(&[0x7f]));
     assert_eq!(Ok(vec![0x2000]), vlq::from_bytes(&[0xc0, 0x00]));
@@ -86,7 +85,6 @@ fn to_bytes_multiple_values() {
 }
 
 #[test]
-#[ignore]
 fn from_bytes_multiple_values() {
     assert_eq!(
         Ok(vec![0x2000, 0x12_3456, 0x0fff_ffff, 0x00, 0x3fff, 0x4000]),
@@ -98,19 +96,16 @@ fn from_bytes_multiple_values() {
 }
 
 #[test]
-#[ignore]
 fn incomplete_byte_sequence() {
     assert_eq!(Err(vlq::Error::IncompleteNumber), vlq::from_bytes(&[0xff]));
 }
 
 #[test]
-#[ignore]
 fn zero_incomplete_byte_sequence() {
     assert_eq!(Err(vlq::Error::IncompleteNumber), vlq::from_bytes(&[0x80]));
 }
 
 #[test]
-#[ignore]
 fn overflow_u32() {
     assert_eq!(
         Err(vlq::Error::Overflow),
@@ -119,7 +114,6 @@ fn overflow_u32() {
 }
 
 #[test]
-#[ignore]
 fn chained_execution_is_identity() {
     let test = &[0xf2, 0xf6, 0x96, 0x9c, 0x3b, 0x39, 0x2e, 0x30, 0xb3, 0x24];
     assert_eq!(
