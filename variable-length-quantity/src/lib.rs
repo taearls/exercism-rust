@@ -3,14 +3,12 @@ pub enum Error {
     IncompleteNumber,
     Overflow,
 }
-const MASK: u32 = 0b1111111;
-const IS_REMAINED: u8 = 0b10000000;
-const IS_LAST: u8 = 0b00000000;
+
 /// Convert a list of numbers to a stream of bytes encoded with variable length encoding.
 pub fn to_bytes(values: &[u32]) -> Vec<u8> {
     let mut result: Vec<u8> = Vec::new();
     for value in values.iter().rev() {
-        let mut val = *value; 
+        let mut val = *value;
         result.push((val as u8) & 0b0111_1111);
         val >>= 7;
 
@@ -25,7 +23,7 @@ pub fn to_bytes(values: &[u32]) -> Vec<u8> {
 
 /// Given a stream of bytes, extract all numbers which are encoded in there.
 pub fn from_bytes(bytes: &[u8]) -> Result<Vec<u32>, Error> {
-    let mut result: Vec<u32> = Vec::new(); 
+    let mut result: Vec<u32> = Vec::new();
     let mut is_complete = false;
     let mut sum = 0u32;
 
