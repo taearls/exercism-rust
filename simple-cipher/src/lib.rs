@@ -68,12 +68,12 @@ pub fn decode(key: &str, s: &str) -> Option<String> {
 }
 
 pub fn encode_random(s: &str) -> (String, String) {
-    let mut key = String::with_capacity(RAND_KEY_LEN);
-    for _ in 0..RAND_KEY_LEN {
-        let key_index: usize = random::<usize>() % ALPHABET.len();
-        let key_char = ALPHABET.get(key_index).unwrap();
-        key.push(*key_char);
-    }
-    let encoded_str = encode(&key, s).unwrap();
-    (key, encoded_str)
+    let key = (0..RAND_KEY_LEN).map(|_| {
+        let random_index: usize = random::<usize>() % ALPHABET.len();
+        ALPHABET.get(random_index).unwrap()
+    }).fold(String::new(), |acc, c| {
+        let mut buf = [0; 2];
+        acc + c.encode_utf8(&mut buf)
+    });
+    (key.clone(), encode(&key, &s).unwrap())
 }
