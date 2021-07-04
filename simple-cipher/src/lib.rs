@@ -6,7 +6,7 @@ const ALPHABET: [char; 26] = [
 ];
 const RAND_KEY_LEN: usize = 100;
 
-pub fn encode(key: &str, s: &str) -> Option<String> {
+fn shift_str<F: Fn(usize, usize) -> usize>(key: &str, s: &str, op: F) -> Option<String> {
     if key.is_empty()
         || s.is_empty()
         || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
@@ -17,16 +17,22 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
         Some(
             s.char_indices()
                 .map(|(i, c)| {
-                    let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
-                    let key_index = i % key.len();
-                    let current_key = key.get(key_index..key_index + 1).unwrap();
-                    let current_key_pos = ALPHABET
+                    let old_char_index = i % key.len();
+
+                    let key_char = key.get(old_char_index..old_char_index + 1).unwrap();
+                    let key_char_pos = ALPHABET
                         .iter()
-                        .position(|&x| x.to_string() == current_key)
+                        .position(|&x| x == key_char.chars().nth(0).unwrap())
                         .unwrap();
-                    let new_index = (old_char_pos + current_key_pos) % ALPHABET.len();
-                    let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
-                    (i, new_char[0])
+                    let old_alphabet_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
+
+                    let shifted_char_alphabet_index =
+                        op(old_alphabet_pos + ALPHABET.len(), key_char_pos) % ALPHABET.len();
+                    let shifted_char = ALPHABET
+                        .get(shifted_char_alphabet_index..shifted_char_alphabet_index + 1)
+                        .unwrap();
+
+                    (i, shifted_char[0])
                 })
                 .fold(String::new(), |acc, (_i, c)| {
                     let mut buf = [0; 2];
@@ -34,46 +40,25 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
                 }),
         )
     }
+}
+
+pub fn encode(key: &str, s: &str) -> Option<String> {
+    shift_str(key, s, |x, y| x + y)
 }
 
 pub fn decode(key: &str, s: &str) -> Option<String> {
-    if key.is_empty()
-        || s.is_empty()
-        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
-        || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
-    {
-        None
-    } else {
-        Some(
-            s.char_indices()
-                .map(|(i, c)| {
-                    let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
-                    let key_index = i % key.len();
-                    let current_key = key.get(key_index..key_index + 1).unwrap();
-                    let current_key_pos = ALPHABET
-                        .iter()
-                        .position(|x| x.to_string() == current_key)
-                        .unwrap();
-                    let new_index =
-                        (old_char_pos + ALPHABET.len() - current_key_pos) % ALPHABET.len();
-                    let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
-                    (i, new_char[0])
-                })
-                .fold(String::new(), |acc, (_i, c)| {
-                    let mut buf = [0; 2];
-                    acc + c.encode_utf8(&mut buf)
-                }),
-        )
-    }
+    shift_str(key, s, |x, y| x - y)
 }
 
 pub fn encode_random(s: &str) -> (String, String) {
-    let key = (0..RAND_KEY_LEN).map(|_| {
-        let random_index: usize = random::<usize>() % ALPHABET.len();
-        ALPHABET.get(random_index).unwrap()
-    }).fold(String::new(), |acc, c| {
-        let mut buf = [0; 2];
-        acc + c.encode_utf8(&mut buf)
-    });
+    let key = (0..RAND_KEY_LEN)
+        .map(|_| {
+            let random_index: usize = random::<usize>() % ALPHABET.len();
+            ALPHABET.get(random_index).unwrap()
+        })
+        .fold(String::new(), |acc, c| {
+            let mut buf = [0; 2];
+            acc + c.encode_utf8(&mut buf)
+        });
     (key.clone(), encode(&key, &s).unwrap())
 }
