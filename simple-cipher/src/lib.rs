@@ -1,7 +1,10 @@
+use rand::random;
+
 const ALPHABET: [char; 26] = [
     'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's',
     't', 'u', 'v', 'w', 'x', 'y', 'z',
 ];
+const RAND_KEY_LEN: usize = 100;
 
 pub fn encode(key: &str, s: &str) -> Option<String> {
     if key.is_empty()
@@ -49,7 +52,7 @@ pub fn decode(key: &str, s: &str) -> Option<String> {
                     let current_key = key.get(key_index..key_index + 1).unwrap();
                     let current_key_pos = ALPHABET
                         .iter()
-                        .position(|&x| x.to_string() == current_key)
+                        .position(|x| x.to_string() == current_key)
                         .unwrap();
                     let new_index =
                         (old_char_pos + ALPHABET.len() - current_key_pos) % ALPHABET.len();
@@ -65,8 +68,12 @@ pub fn decode(key: &str, s: &str) -> Option<String> {
 }
 
 pub fn encode_random(s: &str) -> (String, String) {
-    unimplemented!(
-        "Generate random key with only a-z chars and encode {}. Return tuple (key, encoded s)",
-        s
-    )
+    let mut key = String::with_capacity(RAND_KEY_LEN);
+    for _ in 0..RAND_KEY_LEN {
+        let key_index: usize = random::<usize>() % ALPHABET.len();
+        let key_char = ALPHABET.get(key_index).unwrap();
+        key.push(*key_char);
+    }
+    let encoded_str = encode(&key, s).unwrap();
+    (key, encoded_str)
 }
