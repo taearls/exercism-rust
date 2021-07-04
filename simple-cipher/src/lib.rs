@@ -4,8 +4,7 @@ const ALPHABET: [char; 26] = [
 ];
 
 pub fn encode(key: &str, s: &str) -> Option<String> {
-    if key.len() != s.len()
-        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+    if s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
         || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
     {
         None
@@ -14,12 +13,13 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
             s.char_indices()
                 .map(|(i, c)| {
                     let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
-                    let current_key = key.get(i..i + 1).unwrap();
+                    let key_index = i % key.len();
+                    let current_key = key.get(key_index..key_index + 1).unwrap();
                     let current_key_pos = ALPHABET
                         .iter()
                         .position(|&x| x.to_string() == current_key)
                         .unwrap();
-                    let new_index = (old_char_pos + current_key_pos) % 26;
+                    let new_index = (old_char_pos + current_key_pos) % ALPHABET.len();
                     let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
                     (i, new_char[0])
                 })
@@ -32,8 +32,7 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
 }
 
 pub fn decode(key: &str, s: &str) -> Option<String> {
-    if key.len() != s.len()
-        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+    if s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
         || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
     {
         None
@@ -42,12 +41,13 @@ pub fn decode(key: &str, s: &str) -> Option<String> {
             s.char_indices()
                 .map(|(i, c)| {
                     let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
-                    let current_key = key.get(i..i + 1).unwrap();
+                    let key_index = i % key.len();
+                    let current_key = key.get(key_index..key_index + 1).unwrap();
                     let current_key_pos = ALPHABET
                         .iter()
                         .position(|&x| x.to_string() == current_key)
                         .unwrap();
-                    let new_index = (old_char_pos - current_key_pos) % 26;
+                    let new_index = (old_char_pos + ALPHABET.len() - current_key_pos) % ALPHABET.len();
                     let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
                     (i, new_char[0])
                 })

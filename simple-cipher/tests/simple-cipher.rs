@@ -15,7 +15,6 @@ fn cipher_can_decode_with_given_key() {
 }
 
 #[test]
-#[ignore]
 fn cipher_is_reversible_given_key() {
     assert_eq!(
         decode(KEY, &encode(KEY, PLAIN_TEXT).unwrap()),
