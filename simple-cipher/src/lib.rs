@@ -4,7 +4,9 @@ const ALPHABET: [char; 26] = [
 ];
 
 pub fn encode(key: &str, s: &str) -> Option<String> {
-    if s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+    if key.len() == 0
+        || s.len() == 0
+        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
         || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
     {
         None
@@ -32,7 +34,9 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
 }
 
 pub fn decode(key: &str, s: &str) -> Option<String> {
-    if s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+    if key.len() == 0
+        || s.len() == 0
+        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
         || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
     {
         None
