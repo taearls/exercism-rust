@@ -13,13 +13,13 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
         Some(
             s.char_indices()
                 .map(|(i, c)| {
-                    let alphabet_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
-                    let key_at_pos = key.get(i..i + 1).unwrap();
-                    let key_pos = ALPHABET
+                    let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
+                    let current_key = key.get(i..i + 1).unwrap();
+                    let current_key_pos = ALPHABET
                         .iter()
-                        .position(|&x| x.to_string() == key_at_pos)
+                        .position(|&x| x.to_string() == current_key)
                         .unwrap();
-                    let new_index = (alphabet_pos + key_pos) % 26;
+                    let new_index = (old_char_pos + current_key_pos) % 26;
                     let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
                     (i, new_char[0])
                 })
@@ -32,7 +32,31 @@ pub fn encode(key: &str, s: &str) -> Option<String> {
 }
 
 pub fn decode(key: &str, s: &str) -> Option<String> {
-    unimplemented!("Use {} to decode {} using shift cipher", key, s)
+    if key.len() != s.len()
+        || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+        || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
+    {
+        None
+    } else {
+        Some(
+            s.char_indices()
+                .map(|(i, c)| {
+                    let old_char_pos = ALPHABET.iter().position(|&x| x == c).unwrap();
+                    let current_key = key.get(i..i + 1).unwrap();
+                    let current_key_pos = ALPHABET
+                        .iter()
+                        .position(|&x| x.to_string() == current_key)
+                        .unwrap();
+                    let new_index = (old_char_pos - current_key_pos) % 26;
+                    let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
+                    (i, new_char[0])
+                })
+                .fold(String::new(), |acc, (_i, c)| {
+                    let mut buf = [0; 2];
+                    acc + c.encode_utf8(&mut buf)
+                }),
+        )
+    }
 }
 
 pub fn encode_random(s: &str) -> (String, String) {

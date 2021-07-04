@@ -10,7 +10,6 @@ fn cipher_can_encode_with_given_key() {
 }
 
 #[test]
-#[ignore]
 fn cipher_can_decode_with_given_key() {
     assert_eq!(decode(KEY, "abcdefghij"), Some("aaaaaaaaaa".to_string()));
 }
