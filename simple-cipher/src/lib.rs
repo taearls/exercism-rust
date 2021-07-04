@@ -17,9 +17,9 @@ fn shift_str<F: Fn(usize, usize) -> usize>(key: &str, s: &str, op: F) -> Option<
         Some(
             s.char_indices()
                 .map(|(i, c)| {
-                    let old_char_index = i % key.len();
+                    let key_index = i % key.len();
 
-                    let key_char = key.get(old_char_index..old_char_index + 1).unwrap();
+                    let key_char = key.get(key_index..key_index + 1).unwrap();
                     let key_char_pos = ALPHABET
                         .iter()
                         .position(|&x| x == key_char.chars().nth(0).unwrap())
