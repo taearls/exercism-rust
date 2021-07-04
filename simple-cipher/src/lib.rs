@@ -47,7 +47,8 @@ pub fn decode(key: &str, s: &str) -> Option<String> {
                         .iter()
                         .position(|&x| x.to_string() == current_key)
                         .unwrap();
-                    let new_index = (old_char_pos + ALPHABET.len() - current_key_pos) % ALPHABET.len();
+                    let new_index =
+                        (old_char_pos + ALPHABET.len() - current_key_pos) % ALPHABET.len();
                     let new_char = ALPHABET.get(new_index..new_index + 1).unwrap();
                     (i, new_char[0])
                 })
