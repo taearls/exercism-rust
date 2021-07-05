@@ -8,7 +8,6 @@ const RAND_KEY_LEN: usize = 100;
 
 fn shift_str<F: Fn(usize, usize) -> usize>(key: &str, s: &str, op: F) -> Option<String> {
     if key.is_empty()
-        || s.is_empty()
         || s.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
         || key.chars().filter(|c| !c.is_ascii_lowercase()).count() > 0
     {
