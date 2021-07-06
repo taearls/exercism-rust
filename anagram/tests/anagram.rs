@@ -31,7 +31,6 @@ fn test_detect_simple_anagram() {
 }
 
 #[test]
-#[ignore]
 fn test_does_not_confuse_different_duplicates() {
     let word = "galea";
 
@@ -43,7 +42,6 @@ fn test_does_not_confuse_different_duplicates() {
 }
 
 #[test]
-#[ignore]
 fn test_eliminate_anagram_subsets() {
     let word = "good";
 
@@ -55,7 +53,6 @@ fn test_eliminate_anagram_subsets() {
 }
 
 #[test]
-#[ignore]
 fn test_detect_anagram() {
     let word = "listen";
 
@@ -67,7 +64,6 @@ fn test_detect_anagram() {
 }
 
 #[test]
-#[ignore]
 fn test_multiple_anagrams() {
     let word = "allergy";
 
