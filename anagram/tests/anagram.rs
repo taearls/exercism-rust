@@ -141,7 +141,6 @@ fn test_does_not_detect_a_differently_cased_word_as_its_own_anagram() {
 }
 
 #[test]
-#[ignore]
 fn test_does_not_detect_a_differently_cased_unicode_word_as_its_own_anagram() {
     let word = "ΑΒΓ";
 
@@ -153,7 +152,6 @@ fn test_does_not_detect_a_differently_cased_unicode_word_as_its_own_anagram() {
 }
 
 #[test]
-#[ignore]
 fn test_same_bytes_different_chars() {
     let word = "a⬂"; // 61 E2 AC 82
 
