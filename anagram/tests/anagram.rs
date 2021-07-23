@@ -93,7 +93,6 @@ fn test_case_insensitive_anagrams() {
 }
 
 #[test]
-#[ignore]
 fn test_unicode_anagrams() {
     let word = "ΑΒΓ";
 
