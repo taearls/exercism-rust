@@ -1,3 +1,5 @@
+const STOP_CODON: &str = "stop codon";
+
 pub struct CodonsInfo<'a> {
     pairs: Vec<(&'a str, &'a str)>,
 }
@@ -16,10 +18,10 @@ impl<'a> CodonsInfo<'a> {
         let mut p = rna.chars().peekable();
         while p.peek().is_some() {
             let chunk: String = p.by_ref().take(3).collect();
-            if let Some(name) = self.name_for(&chunk) {
-                result.push(&name);
-            } else {
-                return None;
+            match self.name_for(&chunk) {
+                Some(name) if name == STOP_CODON => break,
+                Some(name) => result.push(name),
+                _ => return None,
             }
         }
         Some(result)
