@@ -7,8 +7,8 @@ pub struct CodonsInfo<'a> {
 
 impl<'a> CodonsInfo<'a> {
     pub fn name_for(&self, codon: &str) -> Option<&'a str> {
-        if let Some(pair) = self.pairs.iter().find(|(c, _name)| *c == codon) {
-            Some(pair.1)
+        if let Some((_, name)) = self.pairs.iter().find(|(c, _)| *c == codon) {
+            Some(name)
         } else {
             None
         }
