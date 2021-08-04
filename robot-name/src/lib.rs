@@ -1,4 +1,5 @@
 const ROBOT_NAME_LEN: usize = 5;
+const LETTER_COUNT: usize = 2;
 
 pub struct Robot {
     name: String,
@@ -6,9 +7,7 @@ pub struct Robot {
 
 impl Robot {
     pub fn new() -> Self {
-        Robot {
-            name: gen_robot_name(""),
-        }
+        Default::default()
     }
 
     pub fn name(&self) -> &str {
@@ -20,6 +19,14 @@ impl Robot {
     }
 }
 
+impl Default for Robot {
+    fn default() -> Self {
+        Robot {
+            name: gen_robot_name(""),
+        }
+    }
+}
+
 fn gen_robot_name(old_name: &str) -> String {
     let mut name = String::with_capacity(ROBOT_NAME_LEN);
 
@@ -27,7 +34,7 @@ fn gen_robot_name(old_name: &str) -> String {
         let modulo: u8;
         let ascii_offset: u8;
 
-        if i < 2 {
+        if i < LETTER_COUNT {
             modulo = 26;
             ascii_offset = 65; // 65 = 'A'
         } else {
