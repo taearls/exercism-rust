@@ -20,11 +20,11 @@ pub trait Planet {
 }
 
 macro_rules! planet {
-    ($planet_name:ident, $period:expr) => {
+    ($planet_name:ident, $orbital_period:expr) => {
         pub struct $planet_name;
         impl Planet for $planet_name {
             fn orbital_period() -> f64 {
-                $period
+                $orbital_period
             }
         }
     };
