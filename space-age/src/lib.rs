@@ -1,28 +1,33 @@
-// The code below is a stub. Just enough to satisfy the compiler.
-// In order to pass the tests you can add-to or change any of this code.
-
-const EARTH_SECONDS: f64 = 31557600.0;
-
 #[derive(Debug)]
-pub struct Duration(f64);
+pub struct Duration {
+    len: f64,
+}
 
 impl From<u64> for Duration {
     fn from(s: u64) -> Self {
-       Duration(s as f64 / EARTH_SECONDS)
+        let earth_seconds = 31557600.0;
+        Duration {
+            len: s as f64 / earth_seconds,
+        }
     }
 }
 
 pub trait Planet {
+    fn orbital_period() -> f64;
     fn years_during(d: &Duration) -> f64 {
-        d.0
+        d.len / Self::orbital_period()
     }
 }
 
 macro_rules! planet {
-    ($t:ident, $x:expr) => {
-        pub struct $t; 
-        impl Planet for $t {}
-    }
+    ($planet_name:ident, $period:expr) => {
+        pub struct $planet_name;
+        impl Planet for $planet_name {
+            fn orbital_period() -> f64 {
+                $period
+            }
+        }
+    };
 }
 planet!(Earth, 1.0);
 planet!(Mercury, 0.2408467);
