@@ -4,7 +4,9 @@ pub struct RailFence {
 
 impl RailFence {
     pub fn new(rails: u32) -> RailFence {
-        RailFence { rails: rails as usize }
+        RailFence {
+            rails: rails as usize,
+        }
     }
 
     pub fn encode(&self, text: &str) -> String {
@@ -34,7 +36,7 @@ impl RailFence {
                 if c != '.' {
                     result.push(c);
                 }
-            } 
+            }
         }
 
         result
