@@ -11,28 +11,26 @@ impl RailFence {
 
     pub fn encode(&self, text: &str) -> String {
         let mut result = String::with_capacity(text.len());
-        let mut vec: Vec<String> = Vec::with_capacity(self.rails);
 
-        // initialize vec with strings
-        for _ in 0..self.rails {
-            vec.push(String::with_capacity(text.len()));
-        }
+        let mut vec: Vec<String> = (0..self.rails)
+            .map(|_| String::with_capacity(text.len()))
+            .collect();
 
         // build up rail cypher
         for pos in 0..text.len() {
             let row_with_char = pos % self.rails;
-            for row in 0..self.rails {
+            for (row, item) in vec.iter_mut().enumerate().take(self.rails) {
                 if row == row_with_char {
-                    vec[row].push(text.chars().nth(pos).unwrap());
+                    item.push(text.chars().nth(pos).unwrap());
                 } else {
-                    vec[row].push('.');
+                    item.push('.');
                 }
             }
         }
 
         // get encoded str in rail cypher
-        for rail in 0..self.rails {
-            for c in vec[rail].chars() {
+        for row in vec.iter().take(self.rails) {
+            for c in row.chars() {
                 if c != '.' {
                     result.push(c);
                 }
