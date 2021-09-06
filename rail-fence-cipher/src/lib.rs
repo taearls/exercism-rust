@@ -10,8 +10,6 @@ impl RailFence {
     }
 
     pub fn encode(&self, text: &str) -> String {
-        let mut result = String::with_capacity(text.len());
-
         let mut vec: Vec<String> = (0..self.rails)
             .map(|_| String::with_capacity(text.len()))
             .collect();
@@ -28,16 +26,15 @@ impl RailFence {
             }
         }
 
-        // get encoded str in rail cypher
-        for row in vec.iter().take(self.rails) {
-            for c in row.chars() {
-                if c != '.' {
-                    result.push(c);
-                }
-            }
-        }
-
-        result
+        vec
+            .iter()
+            .map(|row| {
+                row
+                    .chars()
+                    .filter(|c| *c != '.')
+                    .collect::<String>()
+            })
+            .collect::<String>()
     }
 
     pub fn decode(&self, cipher: &str) -> String {
