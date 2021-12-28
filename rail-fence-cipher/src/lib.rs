@@ -19,20 +19,16 @@ impl RailFence {
             .collect();
 
         // build up rail cypher
-        for pos in 0..graphemes.len() {
+        graphemes.iter().enumerate().for_each(|(pos, grapheme)| {
             let row_with_char = get_row(pos, self.rails);
             for (row, item) in vec.iter_mut().enumerate().take(self.rails) {
                 if row == row_with_char {
-                    item.push_str(graphemes.get(pos).unwrap());
-                } else {
-                    item.push('.');
+                    item.push_str(grapheme);
                 }
             }
-        }
-
+        });
         vec.iter()
-            .map(|row| row.chars().filter(|c| *c != '.').collect::<String>())
-            .collect::<String>()
+            .fold(String::new(), |acc, x| format!("{}{}", acc, x))
     }
 
     // T . . . E . . . I . . . T . . . E . . . L .
@@ -52,9 +48,6 @@ impl RailFence {
 
         //     });
 
-        // vec.iter()
-        //     .map(|row| row.chars().filter(|c| *c != '.').collect::<String>())
-        //     .collect::<String>()
         String::from(cipher)
     }
 }
