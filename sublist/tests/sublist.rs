@@ -67,25 +67,21 @@ fn huge_sublist_not_in_huge_list() {
 }
 
 #[test]
-#[ignore]
 fn superlist_at_start() {
     assert_eq!(Comparison::Superlist, sublist(&[1, 2, 3, 4, 5], &[1, 2, 3]));
 }
 
 #[test]
-#[ignore]
 fn superlist_in_middle() {
     assert_eq!(Comparison::Superlist, sublist(&[5, 4, 3, 2, 1], &[4, 3, 2]));
 }
 
 #[test]
-#[ignore]
 fn superlist_at_end() {
     assert_eq!(Comparison::Superlist, sublist(&[1, 2, 3, 4, 5], &[3, 4, 5]));
 }
 
 #[test]
-#[ignore]
 fn superlist_early_in_huge_list() {
     let huge: Vec<u32> = (1..1_000_000).collect();
 
@@ -93,7 +89,6 @@ fn superlist_early_in_huge_list() {
 }
 
 #[test]
-#[ignore]
 fn recurring_values_sublist() {
     assert_eq!(
         Comparison::Sublist,
@@ -102,7 +97,6 @@ fn recurring_values_sublist() {
 }
 
 #[test]
-#[ignore]
 fn recurring_values_unequal() {
     assert_eq!(
         Comparison::Unequal,
