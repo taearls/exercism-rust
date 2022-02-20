@@ -3,15 +3,17 @@ pub fn divmod(dividend: i16, divisor: i16) -> (i16, i16) {
 }
 
 pub fn evens<T>(iter: impl Iterator<Item = T>) -> impl Iterator<Item = T> {
-    unimplemented!("implement `fn evens`");
-    // TODO: remove this; it's only necessary to allow this function to compile
-    // before the student has done any work.
-    std::iter::empty()
+    let mut is_even = true;
+    iter.filter(move |_| {
+        is_even = !is_even;
+        !is_even 
+    })
 }
 
 pub struct Position(pub i16, pub i16);
 impl Position {
     pub fn manhattan(&self) -> i16 {
-        unimplemented!("implement `fn manhattan`")
+        let (x, y) = (self.0, self.1);
+        x.abs() + y.abs()
     }
 }
