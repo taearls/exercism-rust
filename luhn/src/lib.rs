@@ -9,23 +9,18 @@ pub fn is_valid(code: &str) -> bool {
         return false;
     }
 
+    let double_evens = filtered_digits.len() % 2 == 0;
+
     filtered_digits
         .iter()
         .enumerate()
         .map(|(index, &digit)| {
             let mut digit = digit;
-            if filtered_digits.len() % 2 == 0 {
-                if index % 2 == 0 {
-                    digit *= 2;
-                    if digit > 9 {
-                        digit -= 9;
-                    }
-                }
-            } else if index % 2 == 1 {
+            if double_evens && index % 2 == 0 || !double_evens && index % 2 == 1 {
                 digit *= 2;
-                if digit > 9 {
-                    digit -= 9;
-                }
+            }
+            if digit > 9 {
+                digit -= 9;
             }
             digit
         })
