@@ -19,13 +19,11 @@ fn test_count_one_word() {
 }
 
 #[test]
-#[ignore]
 fn test_count_one_of_each() {
     check_word_count("one of each", &[("one", 1), ("of", 1), ("each", 1)]);
 }
 
 #[test]
-#[ignore]
 fn test_count_multiple_occurrences() {
     check_word_count(
         "one fish two fish red fish blue fish",
