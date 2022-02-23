@@ -14,7 +14,7 @@ pub fn is_valid(code: &str) -> bool {
         .enumerate()
         .map(|(index, &digit)| {
             let mut digit = digit;
-            if code.len() % 2 == 0 {
+            if filtered_digits.len() % 2 == 0 {
                 if index % 2 == 0 {
                     digit *= 2;
                     if digit > 9 {

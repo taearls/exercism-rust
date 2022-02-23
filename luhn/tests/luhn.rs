@@ -103,7 +103,6 @@ fn test_using_ascii_value_for_nondoubled_nondigit_isnt_allowed() {
 }
 
 #[test]
-#[ignore]
 /// valid number with an odd number of spaces
 fn test_valid_number_with_an_odd_number_of_spaces() {
     process_valid_case("234 567 891 234", true);
