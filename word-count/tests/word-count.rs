@@ -32,19 +32,16 @@ fn test_count_multiple_occurrences() {
 }
 
 #[test]
-#[ignore]
 fn cramped_lists() {
     check_word_count("one,two,three", &[("one", 1), ("two", 1), ("three", 1)]);
 }
 
 #[test]
-#[ignore]
 fn expanded_lists() {
     check_word_count("one\ntwo\nthree", &[("one", 1), ("two", 1), ("three", 1)]);
 }
 
 #[test]
-#[ignore]
 fn test_ignore_punctuation() {
     check_word_count(
         "car : carpet as java : javascript!!&@$%^&",
@@ -59,7 +56,6 @@ fn test_ignore_punctuation() {
 }
 
 #[test]
-#[ignore]
 fn test_include_numbers() {
     check_word_count(
         "testing, 1, 2 testing",
@@ -68,7 +64,6 @@ fn test_include_numbers() {
 }
 
 #[test]
-#[ignore]
 fn test_normalize_case() {
     check_word_count("go Go GO Stop stop", &[("go", 3), ("stop", 2)]);
 }
