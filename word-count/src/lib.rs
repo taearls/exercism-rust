@@ -4,9 +4,9 @@ use std::collections::HashMap;
 pub fn word_count(words: &str) -> HashMap<String, u32> {
     let mut result: HashMap<String, u32> = HashMap::new();
 
-    for word in
-        words.split_terminator(&['\n', ',', ' ', '!', '&', ':', '@', '$', '%', '^', '&'][..])
-        .filter(|&word| word != "")
+    for word in words
+        .split_terminator(&['\n', ',', ' ', '!', '&', ':', '@', '$', '%', '^'][..])
+        .filter(|&word| !word.is_empty())
         .map(|word| word.to_ascii_lowercase())
         .collect::<Vec<String>>()
     {
