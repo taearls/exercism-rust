@@ -69,7 +69,6 @@ fn test_normalize_case() {
 }
 
 #[test]
-#[ignore]
 fn with_apostrophes() {
     check_word_count(
         "First: don't laugh. Then: don't cry.",
