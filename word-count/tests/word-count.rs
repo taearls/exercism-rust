@@ -83,7 +83,6 @@ fn with_apostrophes() {
 }
 
 #[test]
-#[ignore]
 fn with_quotations() {
     check_word_count(
         "Joe can't tell between 'large' and large.",

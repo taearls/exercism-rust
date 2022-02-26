@@ -11,6 +11,16 @@ pub fn word_count(words: &str) -> HashMap<String, u32> {
         .collect::<Vec<String>>()
     {
         let mut base: u32 = 0;
+        let word = if word.get(0..1).unwrap_or("") == "'"
+            && word.get(word.len() - 1..word.len()).unwrap_or("") == "'"
+        {
+            let mut trimmed = word.chars();
+            trimmed.next();
+            trimmed.next_back();
+            trimmed.collect::<String>()
+        } else {
+            word
+        };
         if let Some(&val) = result.get(&word) {
             base = val;
         }
