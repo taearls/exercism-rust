@@ -7,28 +7,24 @@ fn sets_with_no_elements_are_empty() {
 }
 
 #[test]
-#[ignore]
 fn sets_with_elements_are_not_empty() {
     let set = CustomSet::new(&[1]);
     assert!(!set.is_empty());
 }
 
 #[test]
-#[ignore]
 fn nothing_is_contained_in_an_empty_set() {
     let set = CustomSet::new(&[]);
     assert!(!set.contains(&1));
 }
 
 #[test]
-#[ignore]
 fn true_when_the_element_is_in_the_set() {
     let set = CustomSet::new(&[1, 2, 3]);
     assert!(set.contains(&1));
 }
 
 #[test]
-#[ignore]
 fn false_when_the_element_is_not_in_the_set() {
     let set = CustomSet::new(&[1, 2, 3]);
     assert!(!set.contains(&4));

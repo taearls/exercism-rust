@@ -1,25 +1,29 @@
-use std::marker::PhantomData;
-
 #[derive(Debug, PartialEq)]
 pub struct CustomSet<T> {
-    // This field is here to make the template compile and not to
-    // complain about unused type parameter 'T'. Once you start
-    // solving the exercise, delete this field and the 'std::marker::PhantomData'
-    // import.
-    phantom: PhantomData<T>,
+    data: Vec<T>,
 }
 
-impl<T> CustomSet<T> {
+impl<T> CustomSet<T>
+where T: Copy + PartialEq
+{
     pub fn new(_input: &[T]) -> Self {
-        unimplemented!();
+        let mut data: Vec<T> = _input.to_vec();
+        for &val in _input.into_iter() {
+            data.push(val);
+        }
+        Self {
+            data,
+        }
     }
 
     pub fn contains(&self, _element: &T) -> bool {
-        unimplemented!();
+       self.data.iter().filter(|&x| x == _element).count() > 0
     }
 
     pub fn add(&mut self, _element: T) {
-        unimplemented!();
+        if !self.contains(&_element) {
+            self.data.push(_element)
+        }
     }
 
     pub fn is_subset(&self, _other: &Self) -> bool {
@@ -27,7 +31,7 @@ impl<T> CustomSet<T> {
     }
 
     pub fn is_empty(&self) -> bool {
-        unimplemented!();
+        self.data.is_empty()
     }
 
     pub fn is_disjoint(&self, _other: &Self) -> bool {
