@@ -4,30 +4,43 @@ pub struct CustomSet<T> {
 }
 
 impl<T> CustomSet<T>
-where T: Copy + PartialEq
+where
+    T: Copy + PartialEq,
 {
     pub fn new(_input: &[T]) -> Self {
         let mut data: Vec<T> = _input.to_vec();
-        for &val in _input.into_iter() {
-            data.push(val);
+        for val in _input.iter() {
+            if !data.contains(val) {
+                data.push(*val);
+            }
         }
-        Self {
-            data,
-        }
+        Self { data }
     }
 
     pub fn contains(&self, _element: &T) -> bool {
-       self.data.iter().filter(|&x| x == _element).count() > 0
+        self.data.iter().filter(|&x| x == _element).count() > 0
     }
 
     pub fn add(&mut self, _element: T) {
         if !self.contains(&_element) {
-            self.data.push(_element)
+            self.data.push(_element);
         }
     }
 
     pub fn is_subset(&self, _other: &Self) -> bool {
-        unimplemented!();
+        if self.data.len() > _other.data.len() {
+            return false;
+        } else if self.is_empty() && _other.is_empty() {
+            return true;
+        }
+        let mut result = true;
+        for val in self.data.iter() {
+            if !_other.contains(val) {
+                result = false;
+                break;
+            }
+        }
+        result
     }
 
     pub fn is_empty(&self) -> bool {
@@ -35,7 +48,14 @@ where T: Copy + PartialEq
     }
 
     pub fn is_disjoint(&self, _other: &Self) -> bool {
-        unimplemented!();
+        let mut result = true;
+        for val in self.data.iter() {
+            if _other.contains(val) {
+                result = false;
+                break;
+            }
+        }
+        result
     }
 
     #[must_use]
