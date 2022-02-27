@@ -134,7 +134,6 @@ fn non_empty_set_is_not_equal_to_an_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn sets_with_the_same_elements_are_equal() {
     let set1 = CustomSet::new(&[1, 2]);
     let set2 = CustomSet::new(&[2, 1]);
@@ -235,7 +234,6 @@ fn difference_of_two_non_empty_sets_is_elements_only_in_first_set_one() {
 }
 
 #[test]
-#[ignore]
 fn union_of_two_empty_sets_is_empty_set() {
     let set1: CustomSet<()> = CustomSet::new(&[]);
     let set2: CustomSet<()> = CustomSet::new(&[]);
@@ -243,7 +241,6 @@ fn union_of_two_empty_sets_is_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn union_of_empty_set_and_non_empty_set_is_all_elements() {
     let set1 = CustomSet::new(&[]);
     let set2 = CustomSet::new(&[2]);
@@ -251,7 +248,6 @@ fn union_of_empty_set_and_non_empty_set_is_all_elements() {
 }
 
 #[test]
-#[ignore]
 fn union_of_non_empty_set_and_empty_set_is_the_non_empty_set() {
     let set1 = CustomSet::new(&[1, 3]);
     let set2 = CustomSet::new(&[]);
@@ -259,7 +255,6 @@ fn union_of_non_empty_set_and_empty_set_is_the_non_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn union_of_non_empty_sets_contains_all_unique_elements() {
     let set1 = CustomSet::new(&[1, 3]);
     let set2 = CustomSet::new(&[2, 3]);

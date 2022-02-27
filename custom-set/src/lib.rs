@@ -92,6 +92,13 @@ where
 
     #[must_use]
     pub fn union(&self, _other: &Self) -> Self {
-        unimplemented!();
+        let mut data = self.data.to_vec();
+        for val in _other.data.iter() {
+            if !data.contains(val) {
+                data.push(*val);
+            }
+        }
+        data.sort();
+        Self { data }
     }
 }
