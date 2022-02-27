@@ -156,7 +156,6 @@ fn add_to_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn add_to_non_empty_set() {
     let mut set = CustomSet::new(&[1, 2, 4]);
     set.add(3);
@@ -164,7 +163,6 @@ fn add_to_non_empty_set() {
 }
 
 #[test]
-#[ignore]
 fn add_existing_element() {
     let mut set = CustomSet::new(&[1, 2, 3]);
     set.add(3);

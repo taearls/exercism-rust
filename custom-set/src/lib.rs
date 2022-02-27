@@ -5,7 +5,7 @@ pub struct CustomSet<T> {
 
 impl<T> CustomSet<T>
 where
-    T: Copy + PartialEq,
+    T: Copy + PartialEq + Ord,
 {
     pub fn new(_input: &[T]) -> Self {
         let mut data: Vec<T> = _input.to_vec();
@@ -14,6 +14,7 @@ where
                 data.push(*val);
             }
         }
+        data.sort();
         Self { data }
     }
 
@@ -24,6 +25,7 @@ where
     pub fn add(&mut self, _element: T) {
         if !self.contains(&_element) {
             self.data.push(_element);
+            self.data.sort();
         }
     }
 
