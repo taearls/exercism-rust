@@ -3,6 +3,15 @@ pub struct CustomSet<T> {
     data: Vec<T>,
 }
 
+// impl<T> IntoIterator for CustomSet<T> {
+//     type Item = T;
+//     type IntoIter = std::vec::IntoIter<Self::Item>;
+
+//     fn into_iter(self) -> Self::IntoIter {
+//         self.data.into_iter()
+//     }
+// }
+
 impl<T> CustomSet<T>
 where
     T: Copy + PartialEq + Ord,
@@ -62,7 +71,13 @@ where
 
     #[must_use]
     pub fn intersection(&self, _other: &Self) -> Self {
-        unimplemented!();
+        let data = self
+            .data
+            .iter()
+            .filter(|x| _other.contains(x))
+            .map(|x| *x)
+            .collect::<Vec<T>>();
+        Self { data }
     }
 
     #[must_use]
