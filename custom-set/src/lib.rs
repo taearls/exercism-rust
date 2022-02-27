@@ -3,15 +3,6 @@ pub struct CustomSet<T> {
     data: Vec<T>,
 }
 
-// impl<T> IntoIterator for CustomSet<T> {
-//     type Item = T;
-//     type IntoIter = std::vec::IntoIter<Self::Item>;
-
-//     fn into_iter(self) -> Self::IntoIter {
-//         self.data.into_iter()
-//     }
-// }
-
 impl<T> CustomSet<T>
 where
     T: Copy + PartialEq + Ord,
@@ -82,7 +73,21 @@ where
 
     #[must_use]
     pub fn difference(&self, _other: &Self) -> Self {
-        unimplemented!();
+        let mut data = self
+            .data
+            .iter()
+            .filter(|x| !_other.contains(x))
+            .map(|x| *x)
+            .collect::<Vec<T>>();
+        let mut other_data = _other
+            .data
+            .iter()
+            .filter(|x| !_other.contains(x))
+            .map(|x| *x)
+            .collect::<Vec<T>>();
+        data.append(&mut other_data);
+        data.sort();
+        Self { data }
     }
 
     #[must_use]
