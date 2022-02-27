@@ -66,7 +66,7 @@ where
             .data
             .iter()
             .filter(|x| _other.contains(x))
-            .map(|x| *x)
+            .copied()
             .collect::<Vec<T>>();
         Self { data }
     }
@@ -77,13 +77,13 @@ where
             .data
             .iter()
             .filter(|x| !_other.contains(x))
-            .map(|x| *x)
+            .copied()
             .collect::<Vec<T>>();
         let mut other_data = _other
             .data
             .iter()
             .filter(|x| !_other.contains(x))
-            .map(|x| *x)
+            .copied()
             .collect::<Vec<T>>();
         data.append(&mut other_data);
         data.sort();
