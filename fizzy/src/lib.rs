@@ -37,12 +37,20 @@ impl<T> Fizzy<T> {
         T: Copy + ToString + PartialEq,
     {
         _iter.map(move |x| {
-            let mut result = x.to_string();
+            let mut result: String = String::new();
             for matcher in self.matchers.iter() {
                 let matcher_fn = matcher.matcher_fn;
                 if matcher_fn(x) {
-                    result = matcher.sub.clone()
+                    let sub = &matcher.sub;
+                    if result.is_empty() {
+                        result = sub.to_string();
+                    } else {
+                        result = format!("{result}{sub}");
+                    }
                 }
+            }
+            if result.is_empty() {
+                result = x.to_string()
             }
             result
         })
@@ -59,8 +67,4 @@ pub fn fizz_buzz<T: Rem<Output = T> + From<u8> + Copy + PartialEq>() -> Fizzy<T>
     Fizzy::new()
         .add_matcher(Matcher::new(|n: T| n % 3_u8.into() == T::from(0), "fizz"))
         .add_matcher(Matcher::new(|n: T| n % 5_u8.into() == T::from(0), "buzz"))
-        .add_matcher(Matcher::new(
-            |n: T| n % 15_u8.into() == T::from(0),
-            "fizzbuzz",
-        ))
 }
