@@ -1,6 +1,4 @@
-#[macro_use]
-extern crate lazy_static;
-
+use lazy_static::lazy_static;
 use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter, Result};
 
@@ -28,6 +26,7 @@ impl Display for Roman {
 
 impl From<u32> for Roman {
     fn from(num: u32) -> Self {
+
         let mut result = String::new();
         let mut num = num;
         for (key, value) in HASHMAP.iter().rev() {
