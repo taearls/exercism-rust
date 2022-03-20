@@ -26,13 +26,9 @@ impl Display for Roman {
 
 impl From<u32> for Roman {
     fn from(num: u32) -> Self {
-        if num == 1 {
-            return Self(String::from("I"));
-        }
         let mut result = String::new();
         let mut num = num;
         for (key, value) in HASHMAP.iter().rev() {
-            // println!("key is: {key}, value is {value}");
             while &num >= key {
                 let len = int_log10(num);
 
@@ -45,7 +41,7 @@ impl From<u32> for Roman {
                     3 => (900, 1000),
                     _ => (*key, *key),
                 };
-                if (lower_bound..=upper_bound).contains(&num) {
+                if (lower_bound..upper_bound).contains(&num) {
                     let mut new_str = String::new();
                     match lower_bound {
                         4 => new_str.push_str("IV"),
@@ -69,7 +65,7 @@ impl From<u32> for Roman {
                         _ => {}
                     };
                     result += &new_str;
-                    num -= lower_bound;
+                    num = 0;
                 } else {
                     result.push_str(value);
                     num -= key;
@@ -80,7 +76,7 @@ impl From<u32> for Roman {
     }
 }
 
-fn parse_lower_bound_roman_num(lower_bound: u32, num: u32, initial: &str) -> String {
+fn parse_lower_bound_roman_num(num: u32, lower_bound: u32, initial: &str) -> String {
     let num = num - lower_bound;
     let mut end = String::new();
     if num > 0 {
