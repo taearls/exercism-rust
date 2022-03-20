@@ -1,4 +1,6 @@
-use lazy_static::lazy_static;
+#[macro_use]
+extern crate lazy_static;
+
 use std::collections::BTreeMap;
 use std::fmt::{Display, Formatter, Result};
 
