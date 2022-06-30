@@ -1,5 +1,8 @@
+use std::cmp::{Ord, Ordering};
+
 use num_bigint::{BigInt, Sign};
 
+#[derive(Eq)]
 pub struct Decimal {
     decimal_factor: usize,
     raw_value: BigInt,
@@ -47,5 +50,21 @@ impl Decimal {
 impl PartialEq for Decimal {
     fn eq(&self, other: &Self) -> bool {
         self.raw_value == other.raw_value && self.decimal_factor == other.decimal_factor
+    }
+}
+
+impl PartialOrd for Decimal {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl Ord for Decimal {
+    fn cmp(&self, other: &Self) -> Ordering {
+        match self.raw_value.cmp(&other.raw_value) {
+            Ordering::Greater => Ordering::Greater,
+            Ordering::Less => Ordering::Less,
+            Ordering::Equal => self.decimal_factor.cmp(&other.decimal_factor),
+        }
     }
 }
