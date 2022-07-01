@@ -1,8 +1,11 @@
-use std::cmp::{Ord, Ordering};
+use std::{
+    cmp::{Ord, Ordering},
+    ops::{Add, Sub},
+};
 
 use num_bigint::{BigInt, Sign};
 
-#[derive(Eq)]
+#[derive(Eq, Debug)]
 pub struct Decimal {
     decimal_factor: usize,
     raw_value: BigInt,
@@ -65,6 +68,38 @@ impl Ord for Decimal {
             Ordering::Greater => Ordering::Greater,
             Ordering::Less => Ordering::Less,
             Ordering::Equal => self.decimal_factor.cmp(&other.decimal_factor),
+        }
+    }
+}
+
+impl Add for Decimal {
+    type Output = Decimal;
+
+    fn add(self, rhs: Self) -> Self::Output {
+        let decimal_factor = if self.decimal_factor <= rhs.decimal_factor {
+            self.decimal_factor
+        } else {
+            rhs.decimal_factor
+        };
+        Decimal {
+            raw_value: self.raw_value + rhs.raw_value,
+            decimal_factor,
+        }
+    }
+}
+
+impl Sub for Decimal {
+    type Output = Decimal;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let decimal_factor = if self.decimal_factor <= rhs.decimal_factor {
+            self.decimal_factor
+        } else {
+            rhs.decimal_factor
+        };
+        Decimal {
+            raw_value: self.raw_value - rhs.raw_value,
+            decimal_factor,
         }
     }
 }

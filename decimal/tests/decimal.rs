@@ -44,20 +44,18 @@ fn test_lt() {
     }
 }
 
-// #[test]
-// #[ignore]
-// fn test_add() {
-//     assert_eq!(decimal("0.1") + decimal("0.2"), decimal("0.3"));
-//     assert_eq!(decimal(BIGS[0]) + decimal(BIGS[1]), decimal(BIGS[2]));
-//     assert_eq!(decimal(BIGS[1]) + decimal(BIGS[0]), decimal(BIGS[2]));
-// }
+#[test]
+fn test_add() {
+    assert_eq!(decimal("0.1") + decimal("0.2"), decimal("0.3"));
+    assert_eq!(decimal(BIGS[0]) + decimal(BIGS[1]), decimal(BIGS[2]));
+    assert_eq!(decimal(BIGS[1]) + decimal(BIGS[0]), decimal(BIGS[2]));
+}
 
-// #[test]
-// #[ignore]
-// fn test_sub() {
-//     assert_eq!(decimal(BIGS[2]) - decimal(BIGS[1]), decimal(BIGS[0]));
-//     assert_eq!(decimal(BIGS[2]) - decimal(BIGS[0]), decimal(BIGS[1]));
-// }
+#[test]
+fn test_sub() {
+    assert_eq!(decimal(BIGS[2]) - decimal(BIGS[1]), decimal(BIGS[0]));
+    assert_eq!(decimal(BIGS[2]) - decimal(BIGS[0]), decimal(BIGS[1]));
+}
 
 // #[test]
 // #[ignore]
