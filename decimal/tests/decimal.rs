@@ -64,39 +64,34 @@ fn test_mul() {
     }
 }
 
-// // test identities
-// #[test]
-// #[ignore]
-// fn test_add_id() {
-//     assert_eq!(decimal("1.0") + decimal("0.0"), decimal("1.0"));
-//     assert_eq!(decimal("0.1") + decimal("0.0"), decimal("0.1"));
-//     assert_eq!(decimal("0.0") + decimal("1.0"), decimal("1.0"));
-//     assert_eq!(decimal("0.0") + decimal("0.1"), decimal("0.1"));
-// }
+// test identities
+#[test]
+fn test_add_id() {
+    assert_eq!(decimal("1.0") + decimal("0.0"), decimal("1.0"));
+    assert_eq!(decimal("0.1") + decimal("0.0"), decimal("0.1"));
+    assert_eq!(decimal("0.0") + decimal("1.0"), decimal("1.0"));
+    assert_eq!(decimal("0.0") + decimal("0.1"), decimal("0.1"));
+}
+
+#[test]
+fn test_sub_id() {
+    assert_eq!(decimal("1.0") - decimal("0.0"), decimal("1.0"));
+    assert_eq!(decimal("0.1") - decimal("0.0"), decimal("0.1"));
+}
+
+#[test]
+fn test_mul_id() {
+    assert_eq!(decimal("2.1") * decimal("1.0"), decimal("2.1"));
+    assert_eq!(decimal("1.0") * decimal("2.1"), decimal("2.1"));
+}
+
+#[test]
+fn test_gt_positive_and_zero() {
+    assert!(decimal("1.0") > decimal("0.0"));
+    assert!(decimal("0.1") > decimal("0.0"));
+}
 
 // #[test]
-// #[ignore]
-// fn test_sub_id() {
-//     assert_eq!(decimal("1.0") - decimal("0.0"), decimal("1.0"));
-//     assert_eq!(decimal("0.1") - decimal("0.0"), decimal("0.1"));
-// }
-
-// #[test]
-// #[ignore]
-// fn test_mul_id() {
-//     assert_eq!(decimal("2.1") * decimal("1.0"), decimal("2.1"));
-//     assert_eq!(decimal("1.0") * decimal("2.1"), decimal("2.1"));
-// }
-
-// #[test]
-// #[ignore]
-// fn test_gt_positive_and_zero() {
-//     assert!(decimal("1.0") > decimal("0.0"));
-//     assert!(decimal("0.1") > decimal("0.0"));
-// }
-
-// #[test]
-// #[ignore]
 // fn test_gt_negative_and_zero() {
 //     assert!(decimal("0.0") > decimal("-0.1"));
 //     assert!(decimal("0.0") > decimal("-1.0"));

@@ -102,7 +102,7 @@ impl Mul for Decimal {
 
     fn mul(self, rhs: Self) -> Self::Output {
         let decimal_factor = get_decimal_factor(&self, &rhs);
-        
+
         Decimal {
             raw_value: self.raw_value * rhs.raw_value,
             decimal_factor,
