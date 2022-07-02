@@ -1,6 +1,6 @@
 use std::{
     cmp::{Ord, Ordering},
-    ops::{Add, Sub},
+    ops::{Add, Mul, Sub},
 };
 
 use num_bigint::{BigInt, Sign};
@@ -13,10 +13,6 @@ pub struct Decimal {
 
 impl Decimal {
     pub fn try_from(input: &str) -> Option<Decimal> {
-        if input.len() < 2 || input.matches('.').count() != 1 {
-            return None;
-        }
-
         let sign = if input.starts_with('-') {
             Sign::Minus
         } else {
@@ -41,7 +37,10 @@ impl Decimal {
             .collect();
         let raw_value = BigInt::new(sign, digits);
 
-        let decimal_factor = input.len() - 1 - input.find('.').unwrap();
+        let decimal_factor = match input.find('.') {
+            Some(index) => input.len() - 1 - index,
+            None => 0,
+        };
 
         Some(Decimal {
             raw_value,
@@ -76,11 +75,8 @@ impl Add for Decimal {
     type Output = Decimal;
 
     fn add(self, rhs: Self) -> Self::Output {
-        let decimal_factor = if self.decimal_factor <= rhs.decimal_factor {
-            self.decimal_factor
-        } else {
-            rhs.decimal_factor
-        };
+        let decimal_factor = get_decimal_factor(&self, &rhs);
+
         Decimal {
             raw_value: self.raw_value + rhs.raw_value,
             decimal_factor,
@@ -92,14 +88,32 @@ impl Sub for Decimal {
     type Output = Decimal;
 
     fn sub(self, rhs: Self) -> Self::Output {
-        let decimal_factor = if self.decimal_factor <= rhs.decimal_factor {
-            self.decimal_factor
-        } else {
-            rhs.decimal_factor
-        };
+        let decimal_factor = get_decimal_factor(&self, &rhs);
+
         Decimal {
             raw_value: self.raw_value - rhs.raw_value,
             decimal_factor,
         }
+    }
+}
+
+impl Mul for Decimal {
+    type Output = Decimal;
+
+    fn mul(self, rhs: Self) -> Self::Output {
+        let decimal_factor = get_decimal_factor(&self, &rhs);
+        
+        Decimal {
+            raw_value: self.raw_value * rhs.raw_value,
+            decimal_factor,
+        }
+    }
+}
+
+fn get_decimal_factor(lhs: &Decimal, rhs: &Decimal) -> usize {
+    if rhs.decimal_factor == 0 || lhs.decimal_factor <= rhs.decimal_factor {
+        lhs.decimal_factor
+    } else {
+        rhs.decimal_factor
     }
 }

@@ -57,13 +57,12 @@ fn test_sub() {
     assert_eq!(decimal(BIGS[2]) - decimal(BIGS[0]), decimal(BIGS[1]));
 }
 
-// #[test]
-// #[ignore]
-// fn test_mul() {
-//     for big in BIGS.iter() {
-//         assert_eq!(decimal(big) * decimal("2"), decimal(big) + decimal(big));
-//     }
-// }
+#[test]
+fn test_mul() {
+    for big in BIGS.iter() {
+        assert_eq!(decimal(big) * decimal("2"), decimal(big) + decimal(big));
+    }
+}
 
 // // test identities
 // #[test]
