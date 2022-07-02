@@ -91,13 +91,13 @@ fn test_gt_positive_and_zero() {
     assert!(decimal("0.1") > decimal("0.0"));
 }
 
-// #[test]
-// fn test_gt_negative_and_zero() {
-//     assert!(decimal("0.0") > decimal("-0.1"));
-//     assert!(decimal("0.0") > decimal("-1.0"));
-// }
+#[test]
+fn test_gt_negative_and_zero() {
+    assert!(decimal("0.0") > decimal("-0.1"));
+    assert!(decimal("0.0") > decimal("-1.0"));
+}
 
-// // tests of arbitrary precision behavior
+// tests of arbitrary precision behavior
 // #[test]
 // #[ignore]
 // fn test_add_uneven_position() {

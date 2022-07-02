@@ -28,8 +28,8 @@ impl Decimal {
                         Ok(val) => Some(val),
                         Err(_) => None,
                     })
-                    .filter_map(|digit| match digit.parse::<u32>() {
-                        Ok(digit) => Some(digit),
+                    .filter_map(|digit| match digit.parse::<i32>() {
+                        Ok(digit) => Some(digit.unsigned_abs()),
                         Err(_) => None,
                     })
                     .collect::<Vec<u32>>()
@@ -57,17 +57,13 @@ impl PartialEq for Decimal {
 
 impl PartialOrd for Decimal {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
-        Some(self.cmp(other))
+        Some(self.raw_value.cmp(&other.raw_value))
     }
 }
 
 impl Ord for Decimal {
     fn cmp(&self, other: &Self) -> Ordering {
-        match self.raw_value.cmp(&other.raw_value) {
-            Ordering::Greater => Ordering::Greater,
-            Ordering::Less => Ordering::Less,
-            Ordering::Equal => self.decimal_factor.cmp(&other.decimal_factor),
-        }
+        self.raw_value.cmp(&other.raw_value)
     }
 }
 
