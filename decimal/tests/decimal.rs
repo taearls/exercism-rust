@@ -105,14 +105,12 @@ fn test_add_uneven_position() {
 }
 
 #[test]
-#[ignore]
 fn test_eq_vary_sig_digits() {
     assert!(decimal("0") == decimal("0000000000000.0000000000000000000000"));
     assert!(decimal("1") == decimal("00000000000000001.000000000000000000"));
 }
 
 #[test]
-#[ignore]
 fn test_add_vary_precision() {
     assert_eq!(
         decimal("100000000000000000000000000000000000000000000")
