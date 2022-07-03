@@ -51,7 +51,7 @@ impl Decimal {
 
 impl PartialEq for Decimal {
     fn eq(&self, other: &Self) -> bool {
-        self.raw_value == other.raw_value && self.decimal_factor == other.decimal_factor
+        self.raw_value == other.raw_value
     }
 }
 
