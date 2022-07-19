@@ -18,7 +18,6 @@ impl Palindrome {
         self.inner
     }
 
-    // pub fn insert(&mut self, (_from, _to): (u64, u64)) {}
 }
 
 fn is_palindrome(num: u64) -> bool {
@@ -28,6 +27,10 @@ fn is_palindrome(num: u64) -> bool {
 }
 
 pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome)> {
+    let palindromes: Vec<u64> = (min..=max)
+        .filter(|num| is_palindrome(*num))
+        .collect();
+        
     if min > max {
         return None;
     }
