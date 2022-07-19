@@ -44,7 +44,7 @@ To learn more about Rust tests refer to the online [test documentation][rust-tes
 
 ## Submitting your solution
 
-You can submit your solution using the `exercism submit src/lib.rs` command.
+You can submit your solution using the `exercism submit src/lib.rs Cargo.toml` command.
 This command will upload your solution to the Exercism website and print the solution page's URL.
 
 It's possible to submit an incomplete solution which allows you to:
@@ -80,6 +80,6 @@ If you want to know more about Exercism, take a look at the [contribution guide]
 ## Submitting Incomplete Solutions
 It's possible to submit an incomplete solution so you can see how others have completed the exercise.
 
-[help-page]: https://exercism.io/tracks/rust/learning
+[help-page]: https://exercism.org/tracks/rust/learning
 [github]: https://github.com/exercism/rust
-[contribution guide]: https://exercism.io/docs/community/contributors
+[contribution guide]: https://exercism.org/docs/community/contributors
