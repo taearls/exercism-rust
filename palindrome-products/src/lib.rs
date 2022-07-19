@@ -2,25 +2,29 @@ use std::cmp::Ordering;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Palindrome {
-    value: u64,
+    inner: u64,
 }
 
 impl Palindrome {
-    pub fn new(a: u64, b: u64) -> Palindrome {
-        Palindrome { value: a * b }
+    pub fn new(number: u64) -> Option<Palindrome> {
+        if is_palindrome(number) {
+            Some(Palindrome { inner: number })
+        } else {
+            None
+        }
     }
 
-    pub fn value(&self) -> u64 {
-        self.value
+    pub fn into_inner(&self) -> u64 {
+        self.inner
     }
 
-    pub fn insert(&mut self, _a: u64, _b: u64) {}
+    // pub fn insert(&mut self, (_from, _to): (u64, u64)) {}
+}
 
-    pub fn is_palindrome(num: u64) -> bool {
-        let str: String = num.to_string();
-        let rev_str: String = str.chars().rev().collect();
-        str == rev_str
-    }
+fn is_palindrome(num: u64) -> bool {
+    let str: String = num.to_string();
+    let rev_str: String = str.chars().rev().collect();
+    str == rev_str
 }
 
 pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome)> {
@@ -32,16 +36,15 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
     let mut max_palindrome: Option<Palindrome> = None;
     while min_iter < max {
         for i in min_iter..=max {
-            if Palindrome::is_palindrome(min_iter * i) {
-                let new_palindrome = Palindrome::new(min_iter, i);
+            if let Some(new_palindrome) = Palindrome::new(min_iter * i) {
                 if min_palindrome.is_none() {
                     min_palindrome = Some(new_palindrome);
                 } else if max_palindrome.is_none() {
                     match min_palindrome
                         .as_mut()
                         .unwrap()
-                        .value()
-                        .cmp(&new_palindrome.value())
+                        .into_inner()
+                        .cmp(&new_palindrome.into_inner())
                     {
                         Ordering::Less | Ordering::Equal => {
                             max_palindrome = Some(new_palindrome);
@@ -51,9 +54,13 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
                             min_palindrome = Some(new_palindrome);
                         }
                     }
-                } else if new_palindrome.value() < min_palindrome.as_mut().unwrap().value() {
+                } else if new_palindrome.into_inner()
+                    < min_palindrome.as_mut().unwrap().into_inner()
+                {
                     min_palindrome = Some(new_palindrome);
-                } else if new_palindrome.value() > max_palindrome.as_mut().unwrap().value() {
+                } else if new_palindrome.into_inner()
+                    > max_palindrome.as_mut().unwrap().into_inner()
+                {
                     max_palindrome = Some(new_palindrome);
                 }
             }

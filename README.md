@@ -26,6 +26,9 @@ Overall, I have really enjoyed learning Rust via Exercism. After reading the Rus
 - Largest Series Product
     - [Exercise](https://exercism.org/tracks/rust/exercises/lsp)
     - [Solution](./lsp)
+- Luhn
+    - [Exercise](https://exercism.org/tracks/rust/exercises/luhn)
+    - [Solution](./luhn)
 - PaaS IO
     - [Exercise](https://exercism.org/tracks/rust/exercises/paasio)
     - [Solution](./paasio)
