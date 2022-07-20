@@ -8,7 +8,7 @@ Overall, I have really enjoyed learning Rust via Exercism. After reading the [Ru
 
 ## My Favorite Solutions (sorted alphabetically)
 
-| Name | Exercism Link | Link to my solution | What I learned |
+| Name | Link to Exercism Challenge | Link to my solution | What I learned |
 |------|---------------|---------------------|----------------|
 | Affine Cipher | [Exercise](https://exercism.org/tracks/rust/exercises/affine-cipher) | [Solution](./affine-cipher) | I learned about the [apphine cipher](https://en.wikipedia.org/wiki/Affine_cipher) algorithm, which is a rudimentary way of encoding a message by substituting alphabetic letters. |
 | Atbash Cipher | [Exercise](https://exercism.org/tracks/rust/exercises/atbash-cipher) | [Solution](./atbash-cipher) | I learned about the [atbash cipher](https://en.wikipedia.org/wiki/Atbash_cipher) algorithm, which is a rudimentary way of encoding a message by using the alphabet in reverse order. |
