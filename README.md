@@ -32,6 +32,9 @@ Overall, I have really enjoyed learning Rust via Exercism. After reading the Rus
 - PaaS IO
     - [Exercise](https://exercism.org/tracks/rust/exercises/paasio)
     - [Solution](./paasio)
+- Palindrome Products
+    - [Exercise](https://exercism.org/tracks/rust/exercises/palindrome-products)
+    - [Solution](./palindrome-products)
 - Spiral Matrix
     - [Exercise](https://exercism.org/tracks/rust/exercises/spiral-matrix)
     - [Solution](./spiral-matrix)
