@@ -4,7 +4,7 @@ This repository is a monorepo tracking all my solutions for the [Rust track](htt
 
 Including solutions for all the 100+ exercises here would get unwieldy quick. However, I will point out some of my favorites in the table below, including a link to the Exercism prompt, a link to my solution, and a brief explanation of what I learned.
 
-Overall, I have really enjoyed learning Rust via Exercism. After reading the [Rust book](https://doc.rust-lang.org/book), I found myself wanting to put it into practice, but I was overwhelmed by the wide domain of problems Rust is able to solve: Do I make a web app ([yes](https://www.github.com/taearls/portfolio), as it turns out!), a microservice, a video game, etc.? So many directions that, at first glance, it stifled me. Exercism guided my learning and helped me feel comfortable using the standard library and popular Rust crates to implement idiomatic solutions.
+Overall, I have really enjoyed learning Rust via Exercism. After reading the [Rust book](https://doc.rust-lang.org/book), I found myself wanting to put it into practice, but I was overwhelmed by the wide domain of problems Rust is able to solve: Do I make a web app ([yes](https://www.github.com/taearls/portfolio), as it turns out!), a microservice, a video game, or something else entirely? So many possibilities arose that, at first glance, it stifled me. Exercism guided my learning and helped me feel comfortable using the standard library and popular Rust crates to implement idiomatic solutions.
 
 ## My Favorite Solutions (sorted alphabetically)
 
