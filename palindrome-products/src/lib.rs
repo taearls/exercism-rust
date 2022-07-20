@@ -1,5 +1,3 @@
-use std::cmp::Ordering;
-
 #[derive(Debug, PartialEq, Eq)]
 pub struct Palindrome {
     inner: u64,
@@ -31,45 +29,37 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
     if min > max {
         return None;
     }
-    let mut min_iter = min;
-    let mut min_palindrome: Option<Palindrome> = None;
-    let mut max_palindrome: Option<Palindrome> = None;
-    while min_iter < max {
-        for i in min_iter..=max {
-            if let Some(new_palindrome) = Palindrome::new(min_iter * i) {
-                if min_palindrome.is_none() {
-                    min_palindrome = Some(new_palindrome);
-                } else if max_palindrome.is_none() {
-                    match min_palindrome
-                        .as_mut()
-                        .unwrap()
-                        .into_inner()
-                        .cmp(&new_palindrome.into_inner())
-                    {
-                        Ordering::Less | Ordering::Equal => {
-                            max_palindrome = Some(new_palindrome);
-                        }
-                        Ordering::Greater => {
-                            max_palindrome = min_palindrome;
-                            min_palindrome = Some(new_palindrome);
-                        }
-                    }
-                } else if new_palindrome.into_inner()
-                    < min_palindrome.as_mut().unwrap().into_inner()
-                {
-                    min_palindrome = Some(new_palindrome);
-                } else if new_palindrome.into_inner()
-                    > max_palindrome.as_mut().unwrap().into_inner()
-                {
-                    max_palindrome = Some(new_palindrome);
-                }
-            }
-        }
-        min_iter += 1;
+    let mut result: Option<(Palindrome, Palindrome)> = None;
+    let should_merge_sort = (max - min) / 2 >= min;
+
+    let min_products_max_range = if should_merge_sort { (max - min) / 2 } else { max };
+    let min_products = find_palindrome_products_in_range(min, min_products_max_range);
+    if !min_products.is_empty() {
+        let min_palindrome = Palindrome::new(*min_products.iter().min().unwrap()).unwrap();
+        let max_palindrome = Palindrome::new(*min_products.iter().max().unwrap()).unwrap();
+        result = Some((min_palindrome, max_palindrome));
     }
 
-    if min_palindrome.is_none() || max_palindrome.is_none() {
-        return None;
+    if should_merge_sort {
+        let max_products = find_palindrome_products_in_range(max / 2, max);
+        if !max_products.is_empty() {
+            let min_product = if min_products.is_empty() {
+                *max_products.iter().min().unwrap()
+            } else {
+                *min_products.iter().min().unwrap()
+            };
+            let min_palindrome = Palindrome::new(min_product).unwrap();
+            let max_palindrome = Palindrome::new(*max_products.iter().max().unwrap()).unwrap();
+            result = Some((min_palindrome, max_palindrome));
+        }
     }
-    Some((min_palindrome.unwrap(), max_palindrome.unwrap()))
+
+    result
+}
+
+fn find_palindrome_products_in_range(min: u64, max: u64) -> Vec<u64> {
+    (min..=max)
+        .flat_map(|x| (x..=max).map(move |y| x * y))
+        .filter(|&x| is_palindrome(x))
+        .collect::<Vec<u64>>()
 }
