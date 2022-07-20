@@ -17,12 +17,6 @@ impl Palindrome {
     }
 }
 
-fn is_palindrome(num: u64) -> bool {
-    let str: String = num.to_string();
-    let rev_str: String = str.chars().rev().collect();
-    str == rev_str
-}
-
 pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome)> {
     if min > max {
         return None;
@@ -43,26 +37,17 @@ pub fn palindrome_products(min: u64, max: u64) -> Option<(Palindrome, Palindrome
         }
     }
 
-    if let Some(min_product) = min_product && let Some(max_product) = max_product {
-        Some((
+    match (min_product, max_product) {
+        (Some(min_product), Some(max_product)) => Some((
             Palindrome::new(min_product).unwrap(),
             Palindrome::new(max_product).unwrap(),
-        ))
-    } else {
-        None
+        )),
+        _ => None,
     }
 }
 
-// fn find_palindrome_products_in_range(min: u64, max: u64) -> Vec<u64> {
-//     (min..=max)
-//         .flat_map(|x| (x..=max).map(move |y| x * y))
-//         .filter(|&x| is_palindrome(x))
-//         .collect::<Vec<u64>>()
-// }
-
-// fn find_min_max_palindrome_products(min: u64, max: u64) -> Option<(u64, u64)> {
-//     (min..=max)
-//         .flat_map(|x| (x..=max).filter_map(move |y| if x * y > ))
-//         .filter(|&x| is_palindrome(x))
-//         .collect::<Vec<u64>>()
-// }
+fn is_palindrome(num: u64) -> bool {
+    let str: String = num.to_string();
+    let rev_str: String = str.chars().rev().collect();
+    str == rev_str
+}
