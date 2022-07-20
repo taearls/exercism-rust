@@ -8,8 +8,6 @@ Overall, I have really enjoyed learning Rust via Exercism. After reading the [Ru
 
 ## My Favorite Solutions (sorted alphabetically)
 
-### Table
-
 | Name | Exercism Link | Link to my solution | What I learned |
 |------|---------------|---------------------|----------------|
 | Affine Cipher | [Exercise](https://exercism.org/tracks/rust/exercises/affine-cipher) | [Solution](./affine-cipher) | I learned about the [apphine cipher](https://en.wikipedia.org/wiki/Affine_cipher) algorithm, which is a rudimentary way of encoding a message by substituting alphabetic letters. |
@@ -18,48 +16,9 @@ Overall, I have really enjoyed learning Rust via Exercism. After reading the [Ru
 | Crypto Square | [Exercise](https://exercism.org/tracks/rust/exercises/crypto-square) | [Solution](./crypto-square) | I liked this one because it was an interesting method of encoding and decoding a plain text message by slicing it into rows that make up a square, and then traversing that square. This helped me solidify working with vectors in Rust. |
 | Dot DSL | [Exercise](https://exercism.org/tracks/rust/exercises/dot-dsl) | [Solution](./dot-dsl) | I liked this one because it gave me a simple use case for a Domain Specific Language (DSL) to implement. This exercise was my first applied experience working with modules in Rust and learning how to publically expose structs and functions so that other files (e.g., unit tests), can use them. |
 | Largest Series Product | [Exercise](https://exercism.org/tracks/rust/exercises/largest-series-product) | [Solution](./largest-series-product) | As a former high school mathlete, I love implementing number theory in code. This one was interesting because it required me to process individual digits within a given number. |
-| Luhn | [Exercise](https://exercism.org/tracks/rust/exercises/luhn) | [Solution](./luhn) |  |
-| PaaS IO | [Exercise](https://exercism.org/tracks/rust/exercises/paasio) | [Solution](./paasio) |  |
-| Palindrome Products | [Exercise](https://exercism.org/tracks/rust/exercises/palindrome-products) | [Solution](./palindrome-products) |  |
-| Spiral Matrix | [Exercise](https://exercism.org/tracks/rust/exercises/spiral-matrix) | [Solution](./spiral-matrix) |  |
-| Two Bucket | [Exercise](https://exercism.org/tracks/rust/exercises/two-bucket) | [Solution](./two-bucket) |  |
-| Variable Length Quantity | [Exercise](https://exercism.org/tracks/rust/exercises/variable-length-quantity) | [Solution](./variable-length-quantity) |  |
-
-### List
-
-- Affine Cipher
-    - [Exercise](https://exercism.org/tracks/rust/exercises/affine-cipher)
-    - [Solution](./affine-cipher)
-- Atbash Cipher
-    - [Exercise](https://exercism.org/tracks/rust/exercises/atbash-cipher)
-    - [Solution](./atbash-cipher)
-- Binary Search
-    - [Exercise](https://exercism.org/tracks/rust/exercises/binary-search)
-    - [Solution](./binary-search)
-- Crypto Square
-    - [Exercise](https://exercism.org/tracks/rust/exercises/crypto-square)
-    - [Solution](./crypto-square)
-- Dot DSL
-    - [Exercise](https://exercism.org/tracks/rust/exercises/dot-dsl)
-    - [Solution](./dot-dsl)
-- Largest Series Product
-    - [Exercise](https://exercism.org/tracks/rust/exercises/lsp)
-    - [Solution](./lsp)
-- Luhn
-    - [Exercise](https://exercism.org/tracks/rust/exercises/luhn)
-    - [Solution](./luhn)
-- PaaS IO
-    - [Exercise](https://exercism.org/tracks/rust/exercises/paasio)
-    - [Solution](./paasio)
-- Palindrome Products
-    - [Exercise](https://exercism.org/tracks/rust/exercises/palindrome-products)
-    - [Solution](./palindrome-products)
-- Spiral Matrix
-    - [Exercise](https://exercism.org/tracks/rust/exercises/spiral-matrix)
-    - [Solution](./spiral-matrix)
-- Two Bucket
-    - [Exercise](https://exercism.org/tracks/rust/exercises/two-bucket)
-    - [Solution](./two-bucket)
-- Variable Length Quantity
-    - [Exercise](https://exercism.org/tracks/rust/exercises/variable-length-quantity)
-    - [Solution](./variable-length-quantity)
+| Luhn | [Exercise](https://exercism.org/tracks/rust/exercises/luhn) | [Solution](./luhn) | I learned about the [Luhn algorithm](https://en.wikipedia.org/wiki/Luhn_algorithm), which is used to validate a variety of identification strings, such as credit card numbers. I wasn't aware of this algorithm prior to this exercise, so it was really valuable as a learning exercise to implement this in idiomatic Rust. |
+| Platform as a Service (PaaS) IO | [Exercise](https://exercism.org/tracks/rust/exercises/paasio) | [Solution](./paasio) | This exercise taught me a basic way of tracking byte sizes in streaming IO. It was a great practical exposure to the [Read](https://doc.rust-lang.org/std/io/trait.Read.html) and [Write](https://doc.rust-lang.org/std/io/trait.Write.html) traits in the Rust standard library. |
+| Palindrome Products | [Exercise](https://exercism.org/tracks/rust/exercises/palindrome-products) | [Solution](./palindrome-products) | This was a fun algorithm to implement. The most challenging part of this one arose when the scale drastically increased in the unit tests. By enabling one unit test to check for the smallest and highest palindrome products in a range of `1000..=9999` (all 4 digit numbers), over a minute was added to the total test execution time. My solution timed out on Exercism. I had to drastically rethink my approach, which mostly involved not constantly allocating memory by writing to a vector while looping through the range of numbers. Functional programming is great (and generally what I prefer these days), but sometimes using for loops with local state and `break`/`continue` statements are the best option for performance. |
+| Spiral Matrix | [Exercise](https://exercism.org/tracks/rust/exercises/spiral-matrix) | [Solution](./spiral-matrix) | I liked this problem because it pushed me to go the extra mile to get a working solution that was as clean as possible. To that end, I added a `Direction` enum to describe which way I was traversing the given spiral matrix, which enabled me to use a match statement to cleanly organize my code. I also used tuples to describe the vertical and horizontal positions of the bounding corners of the matrix. Now, in its current state, it's much easier to read, and feels like idiomatic Rust code. |
+| Two Bucket | [Exercise](https://exercism.org/tracks/rust/exercises/two-bucket) | [Solution](./two-bucket) | I thought this one was cool, but it was surprisingly difficult to get a solution working with all the unit test cases. Frankly, you can probably tell how long this exercise took me to complete by how not clean this solution is; a lot of muscle went into this one. I may go back and revisit this, but for now I like that my implementation demonstrates how you can use Rust's looping syntax to get down and dirty with nested complexity. |
+| Variable Length Quantity | [Exercise](https://exercism.org/tracks/rust/exercises/variable-length-quantity) | [Solution](./variable-length-quantity) | This exercise taught me about the [Variable Length Quantity (VLQ)](https://en.wikipedia.org/wiki/Variable-length_quantity) algorithm, used to encode and decode binary strings. As someone with a strong background in web development, I had rarely ever written code in this domain prior to this challenge. After conducting a lot of research into bitwise operations, learning how to read non-trivial binary and hexadecimal values, and putting it into practice, my solution demonstrates that I can write low level binary algorithms. |
